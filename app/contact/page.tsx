@@ -23,7 +23,7 @@ const Contact = () => {
     setSubmitStatus('idle');
     
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('https://api.bleukei.com/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -98,13 +98,13 @@ const Contact = () => {
           <div className="text-center mt-4">
             <p className="text-sm text-gray-400">
               Or use this link:{' '}
-              <a 
-                href="https://calendar.app.google/example" 
-                target="_blank" 
+              <a
+                href="https://calendar.app.google/9HkGH8jzjx82fwfk8"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-teal-400 hover:text-teal-300 underline"
               >
-                calendar.app.google/YOUR_LINK
+                calendar.app.google/9HkGH8jzjx82fwfk8
               </a>
             </p>
           </div>
@@ -230,14 +230,18 @@ const Contact = () => {
             >
               <span>✉️</span> NB@noaberger.com
             </a>
-            <Link 
-              href="#" 
+            <Link
+              href="https://www.linkedin.com/in/noabberger/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors"
             >
               <span>💼</span> LinkedIn
             </Link>
-            <Link 
-              href="#" 
+            <Link
+              href="https://www.instagram.com/noableu/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors"
             >
               <span>📸</span> Instagram

@@ -17,8 +17,8 @@ const Footer = () => {
 
         <div className="flex space-x-4 mb-4">
           {/* Social Icons */}
-          <a href="#">LinkedIn</a>
-          <a href="#">Instagram</a>
+          <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/noableu/" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
 
         <div className="mb-4">
