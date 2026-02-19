@@ -1,34 +1,89 @@
+import Link from 'next/link';
+
 const Footer = () => {
   return (
-    <footer className="bg-black text-white py-8">
-      <div className="container mx-auto flex flex-col items-center">
-        <div className="mb-4">
-          {/* Logo + Tagline */}
-          <p>BleuKei - Stop Wasting Time. Start Growing Your Business.</p>
+    <footer className="bg-gray-950 border-t border-white/10 text-white py-16 px-4">
+      <div className="container mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+
+          {/* Brand */}
+          <div>
+            <p className="text-xl font-bold mb-2">BLEUKEI</p>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Stop wasting time. Start growing your business.
+            </p>
+            <div className="flex space-x-4 mt-4">
+              <a
+                href="https://www.linkedin.com/in/noabberger/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-teal-400 transition-colors text-sm"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://www.instagram.com/noableu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-teal-400 transition-colors text-sm"
+              >
+                Instagram
+              </a>
+              <a
+                href="mailto:NB@noaberger.com"
+                className="text-gray-400 hover:text-teal-400 transition-colors text-sm"
+              >
+                Email
+              </a>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <p className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Pages</p>
+            <div className="space-y-2">
+              {[
+                { href: '/about', label: 'About' },
+                { href: '/case-studies', label: 'Case Studies' },
+                { href: '/still-curious', label: 'Still Curious?' },
+                { href: '/contact', label: 'Contact' },
+              ].map((link) => (
+                <div key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-white transition-colors text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div>
+            <p className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Ready to grow?</p>
+            <p className="text-gray-400 text-sm mb-4">
+              Book a free consultation. No pitch, no pressure.
+            </p>
+            <Link
+              href="/contact"
+              className="inline-block bg-teal-500 hover:bg-teal-600 text-white text-sm font-semibold py-2 px-5 rounded-lg transition-colors"
+            >
+              Book Free Consultation
+            </Link>
+          </div>
+
         </div>
 
-        <div className="flex space-x-4 mb-4">
-          {/* Quick Links */}
-          <a href="/about">About</a>
-          <a href="/case-studies">Case Studies</a>
-          <a href="/still-curious">Still Curious?</a>
-          <a href="/contact">Contact</a>
-        </div>
-
-        <div className="flex space-x-4 mb-4">
-          {/* Social Icons */}
-          <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://www.instagram.com/noableu/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        </div>
-
-        <div className="mb-4">
-          {/* Email Button */}
-          <a href="mailto:NB@noaberger.com">NB@noaberger.com</a>
-        </div>
-
-        <div className="flex space-x-4">
-          {/* 5 Service Icons */}
-          <p>Service Icons</p>
+        {/* Bottom bar */}
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-sm">
+            © {new Date().getFullYear()} BLEUKEI. All rights reserved.
+          </p>
+          <p className="text-gray-600 text-xs">
+            Built with AI-powered operations
+          </p>
         </div>
       </div>
     </footer>
