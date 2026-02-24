@@ -23,9 +23,9 @@ const Contact = () => {
     setSubmitStatus('idle');
     
     try {
-      const response = await fetch('https://api.bleukei.com/contact', {
+      const response = await fetch('https://formspree.io/f/xqedgjon', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),
       });
       
