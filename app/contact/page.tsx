@@ -80,34 +80,28 @@ const Contact = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white rounded-2xl overflow-hidden shadow-2xl"
+            className="border border-white/10 rounded-2xl p-10 text-center space-y-6"
+            style={{ background: 'linear-gradient(135deg, rgba(45,212,191,0.05) 0%, rgba(0,0,0,0) 100%)' }}
           >
-            {/* Google Calendar Embed */}
-            <iframe 
-              src="https://calendar.app.google/9HkGH8jzjx82fwfk8" 
-              style={{ border: 0 }} 
-              width="100%" 
-              height="600" 
-              frameBorder="0"
-              className="bg-white"
-            >
-              {/* Replace with your actual Google Calendar booking link */}
-            </iframe>
-          </motion.div>
-          
-          <div className="text-center mt-4">
-            <p className="text-sm text-gray-400">
-              Or use this link:{' '}
+            <div className="text-5xl">📅</div>
+            <div>
+              <p className="text-white text-xl font-semibold mb-2">30-Minute Strategy Call</p>
+              <p className="text-gray-400 text-sm max-w-md mx-auto">
+                Pick a time that works for you. We'll discuss your goals, current challenges, and how AI automation can help.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href="https://calendar.app.google/9HkGH8jzjx82fwfk8"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-teal-400 hover:text-teal-300 underline"
+                className="inline-flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 rounded-xl transition-all hover:scale-[1.02]"
               >
-                calendar.app.google/9HkGH8jzjx82fwfk8
+                <span>📆</span> Book a Free Call
               </a>
-            </p>
-          </div>
+            </div>
+            <p className="text-gray-500 text-xs">Opens Google Calendar · No credit card required</p>
+          </motion.div>
         </div>
       </section>
 
