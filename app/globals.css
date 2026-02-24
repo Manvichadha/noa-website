@@ -5,7 +5,8 @@
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-rgb: 0, 0, 0;
-  --teal: 6, 131, 161;
+  --teal: 0, 212, 170;
+  --coral: 255, 107, 107;
 }
 
 * {
@@ -24,25 +25,25 @@ body {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Selection color */
 ::selection {
-  background: rgba(6, 131, 161, 0.3);
+  background: rgba(0, 212, 170, 0.3);
   color: white;
 }
 
@@ -52,9 +53,70 @@ body {
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, #0683a1 0%, #00d4aa 100%);
+    background: linear-gradient(135deg, #00d4aa 0%, #ff6b6b 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+  
+  .gradient-text-teal {
+    background: linear-gradient(135deg, #00d4aa 0%, #0683a1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .glass-hover {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  
+  .glow-teal {
+    box-shadow: 0 0 40px rgba(0, 212, 170, 0.15);
+  }
+  
+  .glow-coral {
+    box-shadow: 0 0 40px rgba(255, 107, 107, 0.15);
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 40px rgba(0, 212, 170, 0.3);
+  }
+}
+
+/* Smooth section transitions */
+section {
+  position: relative;
+}
+
+/* Number counter animation */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-count {
+  animation: countUp 0.6s ease-out forwards;
 }
