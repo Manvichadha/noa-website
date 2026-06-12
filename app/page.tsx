@@ -217,7 +217,7 @@ function ServicesSection() {
       accent: 'text-teal-400',
       title: 'Automation & AI',
       description:
-        'AI-powered systems that handle the repetitive work, so your team can do the valuable work.',
+        'Systems that handle the repetitive work, so your team can do the valuable work. Example: a lead comes in, your CRM is updated and tagged, and a follow-up goes out in minutes, hands-free.',
       tags: ['AI Workflows', 'Lead Nurture', 'Reporting', 'Custom Agents'],
     },
     {
@@ -457,9 +457,73 @@ function WhySection() {
   );
 }
 
+
+// Founder
+function FounderSection() {
+  return (
+    <section id="founder" className="py-24 sm:py-32 relative">
+      <div className="container mx-auto max-w-4xl px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          className="glass rounded-3xl p-10 sm:p-14"
+        >
+          <div className="flex flex-col sm:flex-row gap-10 items-start">
+            <div className="shrink-0">
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-royal-600 to-teal-500 flex items-center justify-center">
+                <span className="text-3xl font-bold text-white">NB</span>
+              </div>
+            </div>
+            <div>
+              <p className="flex items-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-white/40 mb-4">
+                <span className="text-teal-400/80">(BK·04)</span>
+                <span>The Founder</span>
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-5">
+                Noa Berger
+              </h2>
+              <p className="text-white/60 leading-relaxed mb-4">
+                Noa spent years in sports sponsorship brokerage watching how serious brands
+                operate — the strategy, the systems, and the playbooks that make everything
+                compound. BLEUKEI exists to bring that same infrastructure, plus the AI
+                leverage big companies take for granted, to businesses that never had access
+                to it.
+              </p>
+              <p className="text-white/60 leading-relaxed mb-8">
+                Every engagement is run by Noa directly. The person who builds your strategy
+                is the person who executes it with you.
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm">
+                <a
+                  href="https://noaberger.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors font-medium"
+                >
+                  More about Noa <ArrowRight className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/noabberger/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/50 hover:text-white transition-colors font-medium"
+                >
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 // FAQ
-function FaqItem({ q, a, index }: { q: string; a: string; index: string }) {
-  const [open, setOpen] = useState(false);
+function FaqItem({ q, a, index, defaultOpen = false }: { q: string; a: string; index: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-white/10">
       <button
@@ -524,13 +588,13 @@ function FaqSection() {
     <section id="faq" className="py-24 sm:py-32 relative">
       <div className="container mx-auto max-w-3xl px-4">
         <SectionHeading
-          index="04"
+          index="05"
           eyebrow="Questions"
           title="Answers, upfront"
         />
         <div className="border-t border-white/10">
           {faqs.map((faq, i) => (
-            <FaqItem key={i} index={`0${i + 1}`} q={faq.q} a={faq.a} />
+            <FaqItem key={i} index={`0${i + 1}`} q={faq.q} a={faq.a} defaultOpen={i === 1} />
           ))}
         </div>
       </div>
@@ -730,6 +794,9 @@ function Footer() {
             <a href="/still-curious" className="text-white/50 hover:text-white transition-colors">
               FAQ
             </a>
+            <a href="/privacy" className="text-white/50 hover:text-white transition-colors">
+              Privacy
+            </a>
             <a
               href="https://www.linkedin.com/in/noabberger/"
               target="_blank"
@@ -770,6 +837,7 @@ export default function Home() {
       <ServicesSection />
       <ProcessSection />
       <WhySection />
+      <FounderSection />
       <FaqSection />
       <ContactSection />
       <Footer />
