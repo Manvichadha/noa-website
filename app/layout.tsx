@@ -3,26 +3,29 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import FloatingDock from '@/components/FloatingDock'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
 })
 
 export const metadata: Metadata = {
-  title: 'BLEUKEI — Accelerating Ambitious Brands',
-  description: 'We help ambitious brands accelerate growth through strategic brand development, design systems, and performance marketing.',
+  title: 'BLEUKEI — Growth Consultancy',
+  description:
+    'BLEUKEI helps ambitious businesses grow: marketing, GEO + SEO, partnerships and sponsorships, sales systems, AI-powered automation, streamlined operations, and custom tech development.',
   metadataBase: new URL('https://bleukei.com'),
   openGraph: {
     type: 'website',
     url: 'https://bleukei.com',
-    title: 'BLEUKEI — Accelerating Ambitious Brands',
-    description: 'We help ambitious brands accelerate growth through strategic brand development, design systems, and performance marketing.',
+    title: 'BLEUKEI — Growth Consultancy',
+    description:
+      'Marketing, sales, automation, operations, and tech development for businesses ready to scale.',
     siteName: 'BLEUKEI',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BLEUKEI — Accelerating Ambitious Brands',
-    description: 'We help ambitious brands accelerate growth through strategic brand development, design systems, and performance marketing.',
+    title: 'BLEUKEI — Growth Consultancy',
+    description:
+      'Marketing, sales, automation, operations, and tech development for businesses ready to scale.',
   },
   robots: {
     index: true,

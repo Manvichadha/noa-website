@@ -1,398 +1,324 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
-import { ArrowRight, Sparkles, Zap, TrendingUp, Users, Target, Palette, BarChart3, Mail } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Megaphone,
+  TrendingUp,
+  ShieldCheck,
+  Zap,
+  Settings2,
+  Code2,
+  ArrowRight,
+  Calendar,
+  Send,
+  CheckCircle2,
+  AlertCircle,
+  Plus,
+} from 'lucide-react';
 
-// Animated counter component
-function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { 
-  value: number; 
-  suffix?: string; 
-  prefix?: string;
-  duration?: number;
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => Math.round(latest));
-  const [displayValue, setDisplayValue] = useState(0);
+const BOOKING_URL = 'https://calendar.app.google/9HkGH8jzjx82fwfk8';
 
-  useEffect(() => {
-    if (isInView) {
-      const controls = animate(count, value, {
-        duration,
-        ease: "easeOut",
-      });
-      return controls.stop;
-    }
-  }, [isInView, value, count, duration]);
-
-  useEffect(() => {
-    return rounded.on("change", (v) => setDisplayValue(v));
-  }, [rounded]);
-
+// Character-stagger headline word
+function StaggerWord({ text, delayStart = 0 }: { text: string; delayStart?: number }) {
   return (
-    <span ref={ref}>
-      {prefix}{displayValue.toLocaleString()}{suffix}
-    </span>
+    <motion.span
+      initial="hidden"
+      animate="visible"
+      variants={{
+        visible: { transition: { staggerChildren: 0.04, delayChildren: delayStart } },
+      }}
+      className="inline-block"
+      aria-label={text}
+    >
+      {text.split('').map((ch, i) => (
+        <motion.span
+          key={i}
+          aria-hidden
+          className="inline-block"
+          variants={{
+            hidden: { opacity: 0, y: 46 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+          }}
+        >
+          {ch === ' ' ? ' ' : ch}
+        </motion.span>
+      ))}
+    </motion.span>
   );
 }
 
-// Glass card component
-function GlassCard({ children, className = '', hover = true }: { 
-  children: React.ReactNode; 
-  className?: string;
-  hover?: boolean;
-}) {
+// Editorial section label: (BK·01) WHAT WE DO
+function SectionLabel({ index, text }: { index: string; text: string }) {
   return (
-    <div className={`
-      bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl
-      ${hover ? 'hover:bg-white/[0.05] hover:border-white/[0.12] transition-all duration-300' : ''}
-      ${className}
-    `}>
-      {children}
-    </div>
+    <p className="flex items-center justify-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-white/40 mb-5">
+      <span className="text-teal-400/80">(BK·{index})</span>
+      <span>{text}</span>
+    </p>
   );
 }
 
-// Hero Section
+function SectionHeading({
+  index,
+  eyebrow,
+  title,
+  subtitle,
+}: {
+  index: string;
+  eyebrow: string;
+  title: React.ReactNode;
+  subtitle?: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.6 }}
+      className="text-center mb-16"
+    >
+      <SectionLabel index={index} text={eyebrow} />
+      <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">{title}</h2>
+      {subtitle && (
+        <p className="text-lg text-white/60 max-w-2xl mx-auto text-balance">{subtitle}</p>
+      )}
+    </motion.div>
+  );
+}
+
+// Hero
 function HeroSection() {
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-black" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,212,170,0.08),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,107,107,0.05),transparent_40%)]" />
-      
-      {/* Animated grid */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-        backgroundSize: '100px 100px'
-      }} />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center justify-center gap-2 mb-8"
-          >
-            <span className="px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-medium tracking-wider uppercase">
-              Growth & Operations Consultancy
-            </span>
-          </motion.div>
-
-          {/* Main headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-center leading-[1.1] mb-8"
-          >
-            Accelerating
-            <br />
-            <span className="gradient-text">ambitious brands</span>
-          </motion.h1>
-
-          {/* Subheadline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg sm:text-xl md:text-2xl text-white/60 text-center max-w-2xl mx-auto mb-16 leading-relaxed"
-          >
-            We help local businesses reclaim their time and scale through 
-            strategic brand development and performance marketing.
-          </motion.p>
-
-          {/* Metrics */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-16"
-          >
-            <GlassCard className="p-6 sm:p-8 text-center" hover>
-              <div className="text-4xl sm:text-5xl md:text-6xl font-bold gradient-text-teal mb-2">
-                $<AnimatedCounter value={2} suffix="M+" />
-              </div>
-              <div className="text-white/50 text-sm uppercase tracking-wider">Revenue Generated</div>
-            </GlassCard>
-            
-            <GlassCard className="p-6 sm:p-8 text-center" hover>
-              <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-2">
-                <AnimatedCounter value={50} suffix="+" />
-              </div>
-              <div className="text-white/50 text-sm uppercase tracking-wider">Projects Delivered</div>
-            </GlassCard>
-            
-            <GlassCard className="p-6 sm:p-8 text-center" hover>
-              <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-coral-400 mb-2">
-                <AnimatedCounter value={30} suffix="+" />
-              </div>
-              <div className="text-white/50 text-sm uppercase tracking-wider">Brands Accelerated</div>
-            </GlassCard>
-          </motion.div>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <a
-              href="#contact"
-              className="group inline-flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-400 text-black font-semibold py-4 px-8 rounded-full transition-all duration-300 hover:scale-105"
-            >
-              Start Your Growth Journey
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </a>
-            <a
-              href="#projects"
-              className="inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white font-medium py-4 px-8 rounded-full border border-white/10 hover:border-white/20 transition-all duration-300"
-            >
-              View Our Work
-            </a>
-          </motion.div>
-        </div>
+    <section
+      id="hero"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+    >
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[480px] h-[480px] bg-royal-600/20 rounded-full blur-[160px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] bg-teal-500/15 rounded-full blur-[160px]" />
       </div>
 
-      {/* Scroll indicator */}
+      <div className="relative z-10 container mx-auto max-w-4xl px-4 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-block glass rounded-full px-4 py-2 text-sm text-white/70 mb-8"
+        >
+          Growth &amp; Operations Consultancy
+        </motion.p>
+
+        <h1 className="text-5xl sm:text-7xl font-bold tracking-tight leading-[1.05] mb-6">
+          <StaggerWord text="Growth," delayStart={0.15} />{' '}
+          <motion.span
+            initial={{ opacity: 0, y: 46 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-block gradient-text"
+          >
+            engineered.
+          </motion.span>
+        </h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.8 }}
+          className="text-xl text-white/65 max-w-2xl mx-auto mb-5 text-balance"
+        >
+          BLEUKEI helps ambitious businesses scale: marketing that wins attention,
+          and the automation, operations, and technology that win back your time.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.9 }}
+          className="text-sm text-white/45 max-w-xl mx-auto mb-10"
+        >
+          For business leaders who know they should be doing more, but don&apos;t have the
+          time, expertise, or energy to do it themselves.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.95 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-white text-black font-semibold px-7 py-4 rounded-xl hover:bg-white/90 transition-colors"
+          >
+            <Calendar className="w-5 h-5" />
+            Book a Call
+          </a>
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 glass glass-hover font-semibold px-7 py-4 rounded-xl text-white/90 hover:text-white transition-colors"
+          >
+            Tell Us About Your Project
+            <ArrowRight className="w-5 h-5" />
+          </a>
+        </motion.div>
+      </div>
+
+      {/* Capability marquee */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.6 }}
-        className="absolute bottom-32 left-1/2 -translate-x-1/2"
+        transition={{ duration: 1, delay: 1.3 }}
+        className="absolute bottom-10 left-0 right-0 overflow-hidden marquee-mask"
       >
-        <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1 h-2 bg-teal-400 rounded-full"
-          />
-        </div>
+        <CapabilityMarquee />
       </motion.div>
     </section>
   );
 }
 
-// Projects Section
-function ProjectsSection() {
-  const projects = [
-    {
-      client: "Bean & Bloom Café",
-      service: "Brand Strategy + Local SEO",
-      result: "3x revenue increase in 90 days",
-      metric: "300%",
-      metricLabel: "Revenue Growth"
-    },
-    {
-      client: "Artisan Home Services",
-      service: "Content + Automation",
-      result: "40 hours saved weekly",
-      metric: "40h",
-      metricLabel: "Time Saved/Week"
-    },
-    {
-      client: "Coastal Fitness Studio",
-      service: "Paid Ads + Landing Pages",
-      result: "4.5x ROAS consistently",
-      metric: "4.5x",
-      metricLabel: "Return on Ad Spend"
-    },
-    {
-      client: "Urban Retail Collective",
-      service: "E-commerce + Email",
-      result: "150% increase in online sales",
-      metric: "150%",
-      metricLabel: "Sales Increase"
-    }
+function CapabilityMarquee() {
+  const capabilities = [
+    'Social Media',
+    'Brand Strategy',
+    'GEO + SEO',
+    'Partnerships & Sponsorships',
+    'Sales Automation',
+    'Outbound',
+    'AI Workflows',
+    'Lead Nurture',
+    'Process Design',
+    'Operations',
+    'Dashboards',
+    'Web Development',
+    'Integrations',
+    'AI Implementation',
   ];
-
+  const doubled = [...capabilities, ...capabilities];
   return (
-    <section id="projects" className="py-24 sm:py-32 relative">
-      <div className="container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mb-16"
+    <div className="flex w-max animate-marquee gap-3 px-3">
+      {doubled.map((cap, i) => (
+        <span
+          key={i}
+          className="flex items-center gap-2 whitespace-nowrap border border-white/10 rounded-full px-4 py-2 text-sm text-white/55"
         >
-          <span className="text-teal-400 text-sm font-medium uppercase tracking-wider mb-4 block">Selected Work</span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">Recent Projects</h2>
-          <p className="text-white/60 text-lg">Real results for real businesses. Every project is a partnership focused on measurable growth.</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {projects.map((project, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-            >
-              <GlassCard className="p-6 sm:p-8 h-full group cursor-pointer">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-semibold mb-2 group-hover:text-teal-400 transition-colors">{project.client}</h3>
-                    <p className="text-white/50 text-sm">{project.service}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-3xl sm:text-4xl font-bold gradient-text">{project.metric}</div>
-                    <div className="text-white/40 text-xs uppercase tracking-wider">{project.metricLabel}</div>
-                  </div>
-                </div>
-                <div className="pt-6 border-t border-white/10">
-                  <p className="text-white/70">{project.result}</p>
-                </div>
-              </GlassCard>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${i % 2 === 0 ? 'bg-teal-400' : 'bg-royal-400'}`}
+          />
+          {cap}
+        </span>
+      ))}
+    </div>
   );
 }
 
-// Process Section
-function ProcessSection() {
-  const steps = [
-    {
-      number: "01",
-      title: "Discovery",
-      description: "We dive deep into your business, understanding your goals, challenges, and opportunities. No templates, no assumptions.",
-      icon: Target
-    },
-    {
-      number: "02",
-      title: "Strategy",
-      description: "A custom growth roadmap tailored to your specific situation. Clear milestones, realistic timelines, measurable outcomes.",
-      icon: Sparkles
-    },
-    {
-      number: "03",
-      title: "Execution",
-      description: "We implement with precision — brand development, design systems, campaigns, and automation working in harmony.",
-      icon: Zap
-    },
-    {
-      number: "04",
-      title: "Optimize",
-      description: "Continuous improvement based on real data. We scale what works, refine what doesn't, and keep you ahead of the curve.",
-      icon: TrendingUp
-    }
-  ];
-
-  return (
-    <section id="process" className="py-24 sm:py-32 relative">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(0,212,170,0.05),transparent_50%)]" />
-      
-      <div className="container mx-auto px-6 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mb-16"
-        >
-          <span className="text-coral-400 text-sm font-medium uppercase tracking-wider mb-4 block">Our Process</span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">Complex growth, simplified</h2>
-          <p className="text-white/60 text-lg">A proven methodology that turns ambitious goals into achievable results.</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {steps.map((step, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-            >
-              <GlassCard className="p-6 h-full group">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-5xl font-bold text-white/10 group-hover:text-teal-500/20 transition-colors">{step.number}</span>
-                  <step.icon className="w-6 h-6 text-white/30 group-hover:text-teal-400 transition-colors" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-                <p className="text-white/50 text-sm leading-relaxed">{step.description}</p>
-              </GlassCard>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Services Section
+// Services: numbered editorial list
 function ServicesSection() {
   const services = [
     {
-      title: "Brand Strategy",
-      description: "Positioning, messaging, and visual identity that sets you apart from competitors.",
-      icon: Target,
-      color: "teal"
+      number: '01',
+      icon: Megaphone,
+      accent: 'text-royal-400',
+      title: 'Marketing',
+      description:
+        'Strategy and execution that gets you found and chosen: across search, social, and the rooms you are not in yet.',
+      tags: ['Social Media', 'Brand Strategy', 'GEO + SEO', 'Partnerships & Sponsorships'],
     },
     {
-      title: "Design Systems",
-      description: "Cohesive visual language across all touchpoints — web, social, print, and beyond.",
-      icon: Palette,
-      color: "coral"
+      number: '02',
+      icon: TrendingUp,
+      accent: 'text-teal-400',
+      title: 'Sales',
+      description:
+        'Pipelines that fill themselves: outbound systems that find the right prospects, reach out, book the call, and follow up so nothing slips.',
+      tags: ['Outbound Systems', 'CRM Integration', 'Scheduling & Follow-up', 'Signal Tracking'],
     },
     {
-      title: "Growth Marketing",
-      description: "Data-driven campaigns that acquire customers profitably at scale.",
-      icon: BarChart3,
-      color: "teal"
-    },
-    {
-      title: "Operations",
-      description: "Automation and workflows that free up your time to focus on what matters.",
+      number: '03',
       icon: Zap,
-      color: "coral"
-    }
+      accent: 'text-royal-400',
+      title: 'Automation & AI',
+      description:
+        'Systems that handle the repetitive work, so your team can do the valuable work. Example: a lead comes in, your CRM is updated and tagged, and a follow-up goes out in minutes, hands-free.',
+      tags: ['AI Workflows', 'Lead Nurture', 'Reporting', 'Custom Agents'],
+    },
+    {
+      number: '04',
+      icon: Settings2,
+      accent: 'text-teal-400',
+      title: 'Operations',
+      description:
+        'Streamlined processes that make the business run smoothly without depending on you for everything.',
+      tags: ['Process Design', 'Systems & SOPs', 'Dashboards', 'Time Recovery'],
+    },
+    {
+      number: '05',
+      icon: Code2,
+      accent: 'text-royal-400',
+      title: 'Tech Development',
+      description:
+        'Websites, internal tools, and integrations built to fit how your business actually works.',
+      tags: ['Web Development', 'Internal Tools', 'Integrations', 'AI Implementation'],
+    },
   ];
 
   return (
     <section id="services" className="py-24 sm:py-32 relative">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto max-w-5xl px-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mb-16"
+          className="mb-12"
         >
-          <span className="text-teal-400 text-sm font-medium uppercase tracking-wider mb-4 block">What We Do</span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">Services</h2>
-          <p className="text-white/60 text-lg">End-to-end growth solutions for businesses ready to scale.</p>
+          <p className="flex items-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-white/40 mb-5">
+            <span className="text-teal-400/80">(BK·01)</span>
+            <span>What We Do</span>
+          </p>
+          <div className="flex items-end justify-between flex-wrap gap-4">
+            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
+              Services <span className="text-white/30 font-light">(5)</span>
+            </h2>
+            <p className="text-white/50 max-w-sm text-sm leading-relaxed">
+              End-to-end growth: visibility on the front end, efficiency on the back end.
+            </p>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {services.map((service, idx) => (
+        <div className="border-t border-white/10">
+          {services.map((service, i) => (
             <motion.div
-              key={idx}
+              key={service.number}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className="group grid grid-cols-12 gap-4 sm:gap-8 py-10 border-b border-white/10 transition-colors hover:bg-white/[0.02] px-2 sm:px-4"
             >
-              <GlassCard className="p-8 group cursor-pointer h-full">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 ${
-                  service.color === 'teal' ? 'bg-teal-500/10 text-teal-400' : 'bg-coral-500/10 text-coral-400'
-                }`}>
-                  <service.icon className="w-6 h-6" />
+              <div className="col-span-2 sm:col-span-1">
+                <span className="text-sm font-bold gradient-text-teal">{service.number}</span>
+              </div>
+              <div className="col-span-10 sm:col-span-4 flex items-start gap-3">
+                <service.icon className={`w-6 h-6 mt-1 ${service.accent} shrink-0`} />
+                <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+                  {service.title}
+                </h3>
+              </div>
+              <div className="col-span-12 sm:col-span-7 sm:col-start-6">
+                <p className="text-white/60 leading-relaxed mb-5">{service.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {service.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-xs font-medium text-white/50 border border-white/10 rounded-full px-3 py-1"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
-                <h3 className="text-2xl font-semibold mb-3 group-hover:text-teal-400 transition-colors">{service.title}</h3>
-                <p className="text-white/50">{service.description}</p>
-              </GlassCard>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -401,180 +327,219 @@ function ServicesSection() {
   );
 }
 
-// Insights/Newsletter Section
-function InsightsSection() {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      const response = await fetch('https://formspree.io/f/xqedgjon', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email, source: 'Weekly Insights signup' }),
-      });
-      
-      if (response.ok) {
-        setSubmitted(true);
-        setEmail('');
-      } else {
-        alert('Something went wrong. Please try again.');
-      }
-    } catch (error) {
-      alert('Failed to subscribe. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+// Real builds (no client names: discretion is part of the service)
+function BuiltSection() {
+  const builds = [
+    {
+      title: 'Autonomous sales agent',
+      description:
+        'Discovers the right prospects, reaches out, logs everything into the CRM, books the call, and keeps watching for reasons to follow up: a promotion, a product launch, a job change.',
+    },
+    {
+      title: 'Self-improving content engine',
+      description:
+        'Turns founder thinking and market signals into ideas, copy, and scheduled posts. Reviews its own metrics, learns what works and what the client prefers, and improves over time, with human approval at every level.',
+    },
+    {
+      title: 'Visibility infrastructure',
+      description:
+        'Websites built to surface in Google search, AI answers, and Google Maps, backed by the reviews, photos, and signals that mark a business as the leader in its space.',
+    },
+  ];
 
   return (
-    <section id="insights" className="py-24 sm:py-32 relative">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(255,107,107,0.05),transparent_50%)]" />
-      
-      <div className="container mx-auto px-6 relative">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <span className="text-coral-400 text-sm font-medium uppercase tracking-wider mb-4 block">Weekly Insights</span>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">Growth intelligence, delivered</h2>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Join 500+ founders and marketers receiving actionable strategies, case studies, and industry insights every week.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <GlassCard className="p-8 sm:p-12" hover={false}>
-              {submitted ? (
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Sparkles className="w-8 h-8 text-teal-400" />
-                  </div>
-                  <h3 className="text-2xl font-semibold mb-2">You're on the list!</h3>
-                  <p className="text-white/50">Check your inbox for a welcome message.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      required
-                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 transition-colors"
-                    />
-                    <button
-                      type="submit"
-                      className="bg-teal-500 hover:bg-teal-400 text-black font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
-                    >
-                      Subscribe
-                    </button>
-                  </div>
-                  <p className="text-white/30 text-sm text-center">
-                    No spam. Unsubscribe anytime. Join 500+ subscribers.
-                  </p>
-                </form>
-              )}
-            </GlassCard>
-          </motion.div>
-
-          {/* Recent issues preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4"
-          >
-            {[
-              { title: "The 3-Month Growth Sprint", date: "Feb 20, 2026" },
-              { title: "Local SEO in 2026", date: "Feb 13, 2026" },
-              { title: "Automation That Actually Works", date: "Feb 6, 2026" }
-            ].map((issue, idx) => (
-              <div key={idx} className="text-center sm:text-left">
-                <div className="text-white/30 text-xs uppercase tracking-wider mb-1">{issue.date}</div>
-                <div className="text-white/70 text-sm hover:text-teal-400 transition-colors cursor-pointer">{issue.title}</div>
+    <section id="built" className="py-24 sm:py-32 relative">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 right-1/4 w-[480px] h-[420px] bg-royal-700/10 rounded-full blur-[180px]" />
+      </div>
+      <div className="container mx-auto max-w-6xl px-4 relative">
+        <SectionHeading
+          index="02"
+          eyebrow="Real Builds"
+          title="Built, shipped, running"
+          subtitle="A few of the systems working for clients right now, from marketing firms and restaurants to hospitality hosts and growing service businesses."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {builds.map((build, i) => (
+            <motion.div
+              key={build.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+            >
+              <div className="glass rounded-2xl p-8 h-full">
+                <p className="text-sm font-bold gradient-text-teal mb-4">{`0${i + 1}`}</p>
+                <h3 className="text-xl font-semibold mb-3">{build.title}</h3>
+                <p className="text-white/55 leading-relaxed text-sm">{build.description}</p>
               </div>
-            ))}
-          </motion.div>
+            </motion.div>
+          ))}
+        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-10 flex items-start justify-center gap-3 text-center"
+        >
+          <ShieldCheck className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
+          <p className="text-white/50 text-sm max-w-xl">
+            No client names here, by design. We work quietly behind brands: your customers
+            see you, not us. Discretion is part of the service.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// Process: giant numeral anchors
+function ProcessSection() {
+  const steps = [
+    {
+      number: '01',
+      name: 'Clarity',
+      description:
+        'We audit your business: what is working, what is leaking time and money, and where the biggest opportunities sit. No templates, no assumptions.',
+    },
+    {
+      number: '02',
+      name: 'Strategy',
+      description:
+        'A 90-day roadmap with specific goals, specific tactics, and clear success metrics. You know exactly what we are doing and why.',
+    },
+    {
+      number: '03',
+      name: 'Execution',
+      description:
+        'We build and implement alongside your team: campaigns, systems, and automation working together, not in silos.',
+    },
+    {
+      number: '04',
+      name: 'Optimization',
+      description:
+        'We measure against targets, scale what works, and kill what does not. Growth compounds; so does our work.',
+    },
+  ];
+
+  return (
+    <section id="process" className="py-24 sm:py-32 relative">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-royal-700/10 rounded-full blur-[180px]" />
+      </div>
+      <div className="container mx-auto max-w-6xl px-4 relative">
+        <SectionHeading
+          index="03"
+          eyebrow="How We Work"
+          title="Complex growth, simplified"
+          subtitle="A proven four-phase cycle that turns ambitious goals into measurable results."
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step, i) => (
+            <motion.div
+              key={step.number}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="relative glass rounded-2xl p-7 overflow-hidden"
+            >
+              <span
+                aria-hidden
+                className="absolute -top-5 -right-2 text-[7rem] leading-none font-bold text-white/[0.05] select-none pointer-events-none"
+              >
+                {step.number}
+              </span>
+              <p className="text-sm font-bold gradient-text-teal mb-16">{step.number}</p>
+              <h3 className="text-xl font-semibold mb-3">{step.name}</h3>
+              <p className="text-white/55 text-sm leading-relaxed">{step.description}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-// Trust Section
-function TrustSection() {
-  const logos = ["Google", "Meta", "Shopify", "Stripe", "Notion"];
-  
-  const testimonials = [
+// Why BLEUKEI
+function WhySection() {
+  const points = [
     {
-      quote: "BLEUKEI transformed our online presence. We went from invisible to fully booked in 3 months.",
-      author: "Sarah Chen",
-      role: "Owner, Bean & Bloom Café"
+      title: 'Builders, not just advisors',
+      description:
+        'We do not hand you a strategy deck and disappear. We build and run the systems: automation, tools, and infrastructure that keep working after the engagement.',
     },
     {
-      quote: "The automation alone saved us 40 hours a week. Best investment we've made.",
-      author: "Marcus Rodriguez",
-      role: "CEO, Artisan Home Services"
-    }
+      title: 'Founder-led, every engagement',
+      description:
+        'You work directly with the founder. No account managers, no hand-offs to junior staff. The thinking that builds the strategy is the same presence that executes it.',
+    },
+    {
+      title: 'AI-native by default',
+      description:
+        'Every system we build leverages AI where it actually helps: not as a buzzword, but as leverage that lets a small team operate like a big one.',
+    },
+    {
+      title: 'Results-first, always measurable',
+      description:
+        'Clear baselines in week one. If we cannot tie a metric to revenue, leads, or time saved, we do not track it.',
+    },
   ];
 
+  const tools = ['Anthropic', 'OpenAI', 'Google', 'Meta', 'Shopify', 'Notion', 'Zapier', 'Cloudflare'];
+
   return (
-    <section id="trust" className="py-24 sm:py-32 relative">
-      <div className="container mx-auto px-6">
-        {/* Logos */}
+    <section id="why" className="py-24 sm:py-32 relative">
+      <div className="container mx-auto max-w-6xl px-4">
+        <SectionHeading
+          index="04"
+          eyebrow="Why BLEUKEI"
+          title={
+            <>
+              Built different, <span className="gradient-text">on purpose</span>
+            </>
+          }
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {points.map((point, i) => (
+            <motion.div
+              key={point.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+            >
+              <div className="glass rounded-2xl p-8 h-full">
+                <CheckCircle2 className="w-6 h-6 text-teal-400 mb-4" />
+                <h3 className="text-xl font-semibold mb-3">{point.title}</h3>
+                <p className="text-white/55 leading-relaxed">{point.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Tools strip */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-24"
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.8 }}
+          className="mt-20 text-center"
         >
-          <p className="text-center text-white/30 text-sm uppercase tracking-wider mb-8">Trusted by teams at</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-16 opacity-40">
-            {logos.map((logo, idx) => (
-              <span key={idx} className="text-xl sm:text-2xl font-bold text-white/60">{logo}</span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Testimonials */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
-        >
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">What clients say</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {testimonials.map((testimonial, idx) => (
-              <GlassCard key={idx} className="p-8">
-                <blockquote className="text-lg text-white/80 mb-6 leading-relaxed">
-                  "{testimonial.quote}"
-                </blockquote>
-                <div>
-                  <div className="font-semibold">{testimonial.author}</div>
-                  <div className="text-white/50 text-sm">{testimonial.role}</div>
-                </div>
-              </GlassCard>
+          <p className="text-xs font-semibold tracking-[0.3em] uppercase text-white/30 mb-8">
+            Tools We Build With
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+            {tools.map((tool) => (
+              <span
+                key={tool}
+                className="text-lg font-semibold tracking-wide text-white/25 hover:text-white/50 transition-colors select-none"
+              >
+                {tool}
+              </span>
             ))}
           </div>
         </motion.div>
@@ -583,131 +548,319 @@ function TrustSection() {
   );
 }
 
-// CTA/Contact Section
+
+// Founder
+function FounderSection() {
+  return (
+    <section id="founder" className="py-24 sm:py-32 relative">
+      <div className="container mx-auto max-w-4xl px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          className="glass rounded-3xl p-10 sm:p-14"
+        >
+          <div className="flex flex-col sm:flex-row gap-10 items-start">
+            <div className="shrink-0">
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-royal-600 to-teal-500 flex items-center justify-center">
+                <span className="text-3xl font-bold text-white">NB</span>
+              </div>
+            </div>
+            <div>
+              <p className="flex items-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-white/40 mb-4">
+                <span className="text-teal-400/80">(BK·05)</span>
+                <span>The Founder</span>
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-5">
+                Noa Berger
+              </h2>
+              <p className="text-white/60 leading-relaxed mb-4">
+                Noa spent years in sports sponsorship brokerage watching how serious brands
+                operate: the strategy, the systems, and the playbooks that make everything
+                compound. BLEUKEI exists to bring that same infrastructure, plus the AI
+                leverage big companies take for granted, to businesses that never had access
+                to it.
+              </p>
+              <p className="text-white/60 leading-relaxed mb-8">
+                Every engagement is run by Noa directly. The person who builds your strategy
+                is the person who executes it with you.
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm">
+                <a
+                  href="https://noaberger.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors font-medium"
+                >
+                  More about Noa <ArrowRight className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/noabberger/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/50 hover:text-white transition-colors font-medium"
+                >
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// FAQ
+function FaqItem({ q, a, index, defaultOpen = false }: { q: string; a: string; index: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b border-white/10">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between gap-4 py-6 text-left group"
+        aria-expanded={open}
+      >
+        <span className="flex items-baseline gap-4">
+          <span className="text-xs font-bold text-teal-400/70">{index}</span>
+          <span className="font-medium text-lg text-white/90 group-hover:text-white transition-colors">
+            {q}
+          </span>
+        </span>
+        <Plus
+          className={`w-5 h-5 shrink-0 text-teal-400 transition-transform duration-200 ${
+            open ? 'rotate-45' : ''
+          }`}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <p className="pb-6 pl-9 text-white/55 leading-relaxed max-w-2xl">{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function FaqSection() {
+  const faqs = [
+    {
+      q: 'How long does it take to see results?',
+      a: 'Most clients see early indicators within 30 days: improved visibility, more leads, operational time savings. Meaningful revenue impact typically shows at 60 to 90 days as the systems compound. We set specific milestones upfront so you always know what to expect by when.',
+    },
+    {
+      q: 'How is BLEUKEI different from a marketing agency?',
+      a: 'Marketing agencies run campaigns. We build the underlying infrastructure that makes everything compound: operations, automation, visibility, and systems. The result is not just more leads; it is a business that runs better with less of your time.',
+    },
+    {
+      q: 'What does the process actually look like?',
+      a: 'Four phases: Clarity (we audit your business and identify the biggest opportunities), Strategy (a 90-day roadmap with specific goals and metrics), Execution (we implement alongside your team), and Optimization (we measure, iterate, and scale what works).',
+    },
+    {
+      q: 'How much does it cost?',
+      a: 'Every engagement is scoped to your needs, timeline, budget, and how hands-on you want us to be. Pricing is project-based rather than hourly, transparent, and tied to defined deliverables. You will leave your free call with a clear ballpark, not a sales pitch.',
+    },
+    {
+      q: 'How do we get started?',
+      a: 'Book a free 30-minute consultation. We talk about your business, your challenges, and whether we are a fit. No pitch, no pressure. If it makes sense to work together, we outline a proposal within a few days.',
+    },
+  ];
+
+  return (
+    <section id="faq" className="py-24 sm:py-32 relative">
+      <div className="container mx-auto max-w-3xl px-4">
+        <SectionHeading
+          index="06"
+          eyebrow="Questions"
+          title="Answers, upfront"
+        />
+        <div className="border-t border-white/10">
+          {faqs.map((faq, i) => (
+            <FaqItem key={i} index={`0${i + 1}`} q={faq.q} a={faq.a} defaultOpen={i === 1} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Contact
 function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: ''
-  });
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsSubmitting(true);
-    
+    setStatus('sending');
+    const form = e.currentTarget;
+    const data = new FormData(form);
     try {
       const response = await fetch('https://formspree.io/f/xqedgjon', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(formData),
+        body: data,
+        headers: { Accept: 'application/json' },
       });
-      
       if (response.ok) {
-        setSubmitted(true);
+        setStatus('success');
+        form.reset();
       } else {
-        alert('Something went wrong. Please try again.');
+        setStatus('error');
       }
-    } catch (error) {
-      alert('Failed to send. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      setStatus('error');
     }
-  };
+  }
 
   return (
     <section id="contact" className="py-24 sm:py-32 relative">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,212,170,0.08),transparent_50%)]" />
-      
-      <div className="container mx-auto px-6 relative">
-        <div className="max-w-4xl mx-auto">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-teal-600/10 rounded-full blur-[180px]" />
+      </div>
+      <div className="container mx-auto max-w-5xl px-4 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <span className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 text-sm text-white/70 mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-400" />
+            </span>
+            Taking on select engagements
+          </span>
+          <h2 className="text-4xl sm:text-6xl font-bold tracking-tight mb-4">Ready to grow?</h2>
+          <p className="text-lg text-white/60 max-w-2xl mx-auto text-balance">
+            Book a free consultation, or tell us about your project and we will respond within
+            one business day.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-2"
           >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">Ready to accelerate?</h2>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Tell us about your project. We'll get back to you within 24 hours with next steps.
-            </p>
+            <div className="glass rounded-2xl p-8 h-full flex flex-col justify-between glow-royal">
+              <div>
+                <Calendar className="w-8 h-8 text-royal-400 mb-5" />
+                <h3 className="text-2xl font-semibold mb-3">Book a free consultation</h3>
+                <p className="text-white/60 leading-relaxed mb-8">
+                  Thirty minutes, no pitch, no pressure. We talk about your business and
+                  whether we are a fit.
+                </p>
+              </div>
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-royal-600 hover:bg-royal-500 text-white font-semibold px-6 py-4 rounded-xl transition-colors"
+              >
+                <Calendar className="w-5 h-5" />
+                Schedule a Call
+              </a>
+            </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="lg:col-span-3"
           >
-            <GlassCard className="p-8 sm:p-12" hover={false}>
-              {submitted ? (
-                <div className="text-center py-12">
-                  <div className="w-20 h-20 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Mail className="w-10 h-10 text-teal-400" />
-                  </div>
-                  <h3 className="text-3xl font-bold mb-4">Message sent!</h3>
-                  <p className="text-white/50">We'll be in touch within 24 hours.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-white/50 text-sm mb-2">Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 transition-colors"
-                        placeholder="Your name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-white/50 text-sm mb-2">Email</label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 transition-colors"
-                        placeholder="you@company.com"
-                      />
-                    </div>
-                  </div>
+            <div className="glass rounded-2xl p-8">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-white/50 text-sm mb-2">Company</label>
+                    <label htmlFor="name" className="block text-sm text-white/60 mb-2">
+                      Name
+                    </label>
                     <input
+                      id="name"
+                      name="name"
                       type="text"
-                      value={formData.company}
-                      onChange={(e) => setFormData({...formData, company: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 transition-colors"
-                      placeholder="Your company name"
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-teal-500/60 transition-colors"
+                      placeholder="Your name"
                     />
                   </div>
                   <div>
-                    <label className="block text-white/50 text-sm mb-2">Tell us about your project</label>
-                    <textarea
+                    <label htmlFor="email" className="block text-sm text-white/60 mb-2">
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
                       required
-                      rows={4}
-                      value={formData.message}
-                      onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 transition-colors resize-none"
-                      placeholder="What are your goals? What challenges are you facing?"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-teal-500/60 transition-colors"
+                      placeholder="you@company.com"
                     />
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full bg-teal-500 hover:bg-teal-400 text-black font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-[1.02]"
-                  >
-                    Send Message
-                  </button>
-                </form>
-              )}
-            </GlassCard>
+                </div>
+                <div>
+                  <label htmlFor="company" className="block text-sm text-white/60 mb-2">
+                    Company
+                  </label>
+                  <input
+                    id="company"
+                    name="company"
+                    type="text"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-teal-500/60 transition-colors"
+                    placeholder="Your business"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="message" className="block text-sm text-white/60 mb-2">
+                    Tell us about your project
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-teal-500/60 transition-colors resize-none"
+                    placeholder="What are you trying to grow, fix, or build?"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="inline-flex items-center gap-2 bg-white text-black font-semibold px-6 py-3.5 rounded-xl hover:bg-white/90 transition-colors disabled:opacity-60"
+                >
+                  <Send className="w-4 h-4" />
+                  {status === 'sending' ? 'Sending…' : 'Send Message'}
+                </button>
+
+                {status === 'success' && (
+                  <p className="flex items-center gap-2 text-teal-400 text-sm">
+                    <CheckCircle2 className="w-4 h-4" />
+                    Message sent. We will get back to you within one business day.
+                  </p>
+                )}
+                {status === 'error' && (
+                  <p className="flex items-center gap-2 text-royal-300 text-sm">
+                    <AlertCircle className="w-4 h-4" />
+                    Something went wrong. Email us directly at nb@noaberger.com.
+                  </p>
+                )}
+              </form>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -718,21 +871,50 @@ function ContactSection() {
 // Footer
 function Footer() {
   return (
-    <footer className="py-12 border-t border-white/5">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold gradient-text">BLEUKEI</span>
+    <footer className="border-t border-white/10 py-14 px-4">
+      <div className="container mx-auto max-w-6xl">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="text-center sm:text-left">
+            <p className="text-lg font-bold tracking-wide">BLEUKEI</p>
+            <p className="text-white/40 text-sm mt-1">Growth &amp; Operations Consultancy</p>
           </div>
-          <div className="text-white/30 text-sm">
-            © 2026 BLEUKEI. All rights reserved.
-          </div>
-          <div className="flex gap-6">
-            <a href="#" className="text-white/50 hover:text-teal-400 transition-colors text-sm">Twitter</a>
-            <a href="#" className="text-white/50 hover:text-teal-400 transition-colors text-sm">LinkedIn</a>
-            <a href="#" className="text-white/50 hover:text-teal-400 transition-colors text-sm">Instagram</a>
+          <div className="flex items-center gap-6 text-sm">
+            <a href="/about" className="text-white/50 hover:text-white transition-colors">
+              About
+            </a>
+            <a href="/still-curious" className="text-white/50 hover:text-white transition-colors">
+              FAQ
+            </a>
+            <a href="/privacy" className="text-white/50 hover:text-white transition-colors">
+              Privacy
+            </a>
+            <a
+              href="https://www.linkedin.com/in/noabberger/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/50 hover:text-teal-400 transition-colors"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://www.instagram.com/noableu/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/50 hover:text-teal-400 transition-colors"
+            >
+              Instagram
+            </a>
+            <a
+              href="mailto:nb@noaberger.com"
+              className="text-white/50 hover:text-teal-400 transition-colors"
+            >
+              Email
+            </a>
           </div>
         </div>
+        <p className="text-white/30 text-xs text-center sm:text-left mt-8">
+          © {new Date().getFullYear()} BLEUKEI. All rights reserved.
+        </p>
       </div>
     </footer>
   );
@@ -741,13 +923,14 @@ function Footer() {
 // Main Page
 export default function Home() {
   return (
-    <main className="bg-black min-h-screen">
+    <main>
       <HeroSection />
-      <ProjectsSection />
       <ServicesSection />
+      <BuiltSection />
       <ProcessSection />
-      <TrustSection />
-      <InsightsSection />
+      <WhySection />
+      <FounderSection />
+      <FaqSection />
       <ContactSection />
       <Footer />
     </main>

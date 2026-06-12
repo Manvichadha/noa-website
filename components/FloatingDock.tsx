@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, Palette, BarChart3, Mail, Home } from 'lucide-react';
+import { Target, Workflow, Mail, Home } from 'lucide-react';
 
 const navItems = [
   { id: 'hero', label: 'Home', icon: Home },
   { id: 'services', label: 'Services', icon: Target },
-  { id: 'projects', label: 'Work', icon: Palette },
-  { id: 'insights', label: 'Insights', icon: BarChart3 },
+  { id: 'process', label: 'Process', icon: Workflow },
   { id: 'contact', label: 'Contact', icon: Mail },
 ];
 
