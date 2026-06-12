@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Megaphone,
+  TrendingUp,
+  ShieldCheck,
   Zap,
   Settings2,
   Code2,
@@ -122,10 +124,20 @@ function HeroSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.8 }}
-          className="text-xl text-white/65 max-w-2xl mx-auto mb-10 text-balance"
+          className="text-xl text-white/65 max-w-2xl mx-auto mb-5 text-balance"
         >
-          BLEUKEI helps ambitious businesses scale — marketing that wins attention,
+          BLEUKEI helps ambitious businesses scale: marketing that wins attention,
           and the automation, operations, and technology that win back your time.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.9 }}
+          className="text-sm text-white/45 max-w-xl mx-auto mb-10"
+        >
+          For business leaders who know they should be doing more, but don&apos;t have the
+          time, expertise, or energy to do it themselves.
         </motion.p>
 
         <motion.div
@@ -172,6 +184,8 @@ function CapabilityMarquee() {
     'Brand Strategy',
     'GEO + SEO',
     'Partnerships & Sponsorships',
+    'Sales Automation',
+    'Outbound',
     'AI Workflows',
     'Lead Nurture',
     'Process Design',
@@ -199,7 +213,7 @@ function CapabilityMarquee() {
   );
 }
 
-// Services — numbered editorial list
+// Services: numbered editorial list
 function ServicesSection() {
   const services = [
     {
@@ -208,31 +222,40 @@ function ServicesSection() {
       accent: 'text-royal-400',
       title: 'Marketing',
       description:
-        'Strategy and execution that gets you found and chosen — across search, social, and the rooms you are not in yet.',
+        'Strategy and execution that gets you found and chosen: across search, social, and the rooms you are not in yet.',
       tags: ['Social Media', 'Brand Strategy', 'GEO + SEO', 'Partnerships & Sponsorships'],
     },
     {
       number: '02',
-      icon: Zap,
+      icon: TrendingUp,
       accent: 'text-teal-400',
+      title: 'Sales',
+      description:
+        'Pipelines that fill themselves: outbound systems that find the right prospects, reach out, book the call, and follow up so nothing slips.',
+      tags: ['Outbound Systems', 'CRM Integration', 'Scheduling & Follow-up', 'Signal Tracking'],
+    },
+    {
+      number: '03',
+      icon: Zap,
+      accent: 'text-royal-400',
       title: 'Automation & AI',
       description:
         'Systems that handle the repetitive work, so your team can do the valuable work. Example: a lead comes in, your CRM is updated and tagged, and a follow-up goes out in minutes, hands-free.',
       tags: ['AI Workflows', 'Lead Nurture', 'Reporting', 'Custom Agents'],
     },
     {
-      number: '03',
+      number: '04',
       icon: Settings2,
-      accent: 'text-royal-400',
+      accent: 'text-teal-400',
       title: 'Operations',
       description:
         'Streamlined processes that make the business run smoothly without depending on you for everything.',
       tags: ['Process Design', 'Systems & SOPs', 'Dashboards', 'Time Recovery'],
     },
     {
-      number: '04',
+      number: '05',
       icon: Code2,
-      accent: 'text-teal-400',
+      accent: 'text-royal-400',
       title: 'Tech Development',
       description:
         'Websites, internal tools, and integrations built to fit how your business actually works.',
@@ -256,7 +279,7 @@ function ServicesSection() {
           </p>
           <div className="flex items-end justify-between flex-wrap gap-4">
             <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
-              Services <span className="text-white/30 font-light">(4)</span>
+              Services <span className="text-white/30 font-light">(5)</span>
             </h2>
             <p className="text-white/50 max-w-sm text-sm leading-relaxed">
               End-to-end growth: visibility on the front end, efficiency on the back end.
@@ -304,14 +327,82 @@ function ServicesSection() {
   );
 }
 
-// Process — giant numeral anchors
+
+// Real builds (no client names: discretion is part of the service)
+function BuiltSection() {
+  const builds = [
+    {
+      title: 'Autonomous sales agent',
+      description:
+        'Discovers the right prospects, reaches out, logs everything into the CRM, books the call, and keeps watching for reasons to follow up: a promotion, a product launch, a job change.',
+    },
+    {
+      title: 'Self-improving content engine',
+      description:
+        'Turns founder thinking and market signals into ideas, copy, and scheduled posts. Reviews its own metrics, learns what works and what the client prefers, and improves over time, with human approval at every level.',
+    },
+    {
+      title: 'Visibility infrastructure',
+      description:
+        'Websites built to surface in Google search, AI answers, and Google Maps, backed by the reviews, photos, and signals that mark a business as the leader in its space.',
+    },
+  ];
+
+  return (
+    <section id="built" className="py-24 sm:py-32 relative">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 right-1/4 w-[480px] h-[420px] bg-royal-700/10 rounded-full blur-[180px]" />
+      </div>
+      <div className="container mx-auto max-w-6xl px-4 relative">
+        <SectionHeading
+          index="02"
+          eyebrow="Real Builds"
+          title="Built, shipped, running"
+          subtitle="A few of the systems working for clients right now, from marketing firms and restaurants to hospitality hosts and growing service businesses."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {builds.map((build, i) => (
+            <motion.div
+              key={build.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+            >
+              <div className="glass rounded-2xl p-8 h-full">
+                <p className="text-sm font-bold gradient-text-teal mb-4">{`0${i + 1}`}</p>
+                <h3 className="text-xl font-semibold mb-3">{build.title}</h3>
+                <p className="text-white/55 leading-relaxed text-sm">{build.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-10 flex items-start justify-center gap-3 text-center"
+        >
+          <ShieldCheck className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
+          <p className="text-white/50 text-sm max-w-xl">
+            No client names here, by design. We work quietly behind brands: your customers
+            see you, not us. Discretion is part of the service.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// Process: giant numeral anchors
 function ProcessSection() {
   const steps = [
     {
       number: '01',
       name: 'Clarity',
       description:
-        'We audit your business — what is working, what is leaking time and money, and where the biggest opportunities sit. No templates, no assumptions.',
+        'We audit your business: what is working, what is leaking time and money, and where the biggest opportunities sit. No templates, no assumptions.',
     },
     {
       number: '02',
@@ -323,7 +414,7 @@ function ProcessSection() {
       number: '03',
       name: 'Execution',
       description:
-        'We build and implement alongside your team — campaigns, systems, and automation working together, not in silos.',
+        'We build and implement alongside your team: campaigns, systems, and automation working together, not in silos.',
     },
     {
       number: '04',
@@ -340,7 +431,7 @@ function ProcessSection() {
       </div>
       <div className="container mx-auto max-w-6xl px-4 relative">
         <SectionHeading
-          index="02"
+          index="03"
           eyebrow="How We Work"
           title="Complex growth, simplified"
           subtitle="A proven four-phase cycle that turns ambitious goals into measurable results."
@@ -379,7 +470,7 @@ function WhySection() {
     {
       title: 'Builders, not just advisors',
       description:
-        'We do not hand you a strategy deck and disappear. We build and run the systems — automation, tools, and infrastructure that keep working after the engagement.',
+        'We do not hand you a strategy deck and disappear. We build and run the systems: automation, tools, and infrastructure that keep working after the engagement.',
     },
     {
       title: 'Founder-led, every engagement',
@@ -389,7 +480,7 @@ function WhySection() {
     {
       title: 'AI-native by default',
       description:
-        'Every system we build leverages AI where it actually helps — not as a buzzword, but as leverage that lets a small team operate like a big one.',
+        'Every system we build leverages AI where it actually helps: not as a buzzword, but as leverage that lets a small team operate like a big one.',
     },
     {
       title: 'Results-first, always measurable',
@@ -404,7 +495,7 @@ function WhySection() {
     <section id="why" className="py-24 sm:py-32 relative">
       <div className="container mx-auto max-w-6xl px-4">
         <SectionHeading
-          index="03"
+          index="04"
           eyebrow="Why BLEUKEI"
           title={
             <>
@@ -478,7 +569,7 @@ function FounderSection() {
             </div>
             <div>
               <p className="flex items-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-white/40 mb-4">
-                <span className="text-teal-400/80">(BK·04)</span>
+                <span className="text-teal-400/80">(BK·05)</span>
                 <span>The Founder</span>
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-5">
@@ -486,7 +577,7 @@ function FounderSection() {
               </h2>
               <p className="text-white/60 leading-relaxed mb-4">
                 Noa spent years in sports sponsorship brokerage watching how serious brands
-                operate — the strategy, the systems, and the playbooks that make everything
+                operate: the strategy, the systems, and the playbooks that make everything
                 compound. BLEUKEI exists to bring that same infrastructure, plus the AI
                 leverage big companies take for granted, to businesses that never had access
                 to it.
@@ -564,11 +655,11 @@ function FaqSection() {
   const faqs = [
     {
       q: 'How long does it take to see results?',
-      a: 'Most clients see early indicators within 30 days — improved visibility, more leads, operational time savings. Meaningful revenue impact typically shows at 60 to 90 days as the systems compound. We set specific milestones upfront so you always know what to expect by when.',
+      a: 'Most clients see early indicators within 30 days: improved visibility, more leads, operational time savings. Meaningful revenue impact typically shows at 60 to 90 days as the systems compound. We set specific milestones upfront so you always know what to expect by when.',
     },
     {
       q: 'How is BLEUKEI different from a marketing agency?',
-      a: 'Marketing agencies run campaigns. We build the underlying infrastructure that makes everything compound — operations, automation, visibility, and systems. The result is not just more leads; it is a business that runs better with less of your time.',
+      a: 'Marketing agencies run campaigns. We build the underlying infrastructure that makes everything compound: operations, automation, visibility, and systems. The result is not just more leads; it is a business that runs better with less of your time.',
     },
     {
       q: 'What does the process actually look like?',
@@ -576,7 +667,7 @@ function FaqSection() {
     },
     {
       q: 'How much does it cost?',
-      a: 'We quote based on scope after a free consultation, because every business is different. What we can tell you: pricing is project-based rather than hourly, transparent, and tied to defined deliverables. Book a free call and we will be direct about what makes sense.',
+      a: 'Every engagement is scoped to your needs, timeline, budget, and how hands-on you want us to be. Pricing is project-based rather than hourly, transparent, and tied to defined deliverables. You will leave your free call with a clear ballpark, not a sales pitch.',
     },
     {
       q: 'How do we get started?',
@@ -588,7 +679,7 @@ function FaqSection() {
     <section id="faq" className="py-24 sm:py-32 relative">
       <div className="container mx-auto max-w-3xl px-4">
         <SectionHeading
-          index="05"
+          index="06"
           eyebrow="Questions"
           title="Answers, upfront"
         />
@@ -835,6 +926,7 @@ export default function Home() {
     <main>
       <HeroSection />
       <ServicesSection />
+      <BuiltSection />
       <ProcessSection />
       <WhySection />
       <FounderSection />
