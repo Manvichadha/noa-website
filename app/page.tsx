@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Megaphone,
   Zap,
@@ -12,37 +12,57 @@ import {
   Send,
   CheckCircle2,
   AlertCircle,
+  Plus,
 } from 'lucide-react';
 
 const BOOKING_URL = 'https://calendar.app.google/9HkGH8jzjx82fwfk8';
 
-// Glass card component
-function GlassCard({
-  children,
-  className = '',
-  hover = true,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  hover?: boolean;
-}) {
+// Character-stagger headline word
+function StaggerWord({ text, delayStart = 0 }: { text: string; delayStart?: number }) {
   return (
-    <div
-      className={`glass rounded-2xl ${
-        hover ? 'transition-all duration-300 hover:glass-hover hover:-translate-y-1' : ''
-      } ${className}`}
+    <motion.span
+      initial="hidden"
+      animate="visible"
+      variants={{
+        visible: { transition: { staggerChildren: 0.04, delayChildren: delayStart } },
+      }}
+      className="inline-block"
+      aria-label={text}
     >
-      {children}
-    </div>
+      {text.split('').map((ch, i) => (
+        <motion.span
+          key={i}
+          aria-hidden
+          className="inline-block"
+          variants={{
+            hidden: { opacity: 0, y: 46 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+          }}
+        >
+          {ch === ' ' ? ' ' : ch}
+        </motion.span>
+      ))}
+    </motion.span>
   );
 }
 
-// Section heading
+// Editorial section label: (BK·01) WHAT WE DO
+function SectionLabel({ index, text }: { index: string; text: string }) {
+  return (
+    <p className="flex items-center justify-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-white/40 mb-5">
+      <span className="text-teal-400/80">(BK·{index})</span>
+      <span>{text}</span>
+    </p>
+  );
+}
+
 function SectionHeading({
+  index,
   eyebrow,
   title,
   subtitle,
 }: {
+  index: string;
   eyebrow: string;
   title: React.ReactNode;
   subtitle?: string;
@@ -55,9 +75,7 @@ function SectionHeading({
       transition={{ duration: 0.6 }}
       className="text-center mb-16"
     >
-      <p className="text-sm font-semibold tracking-widest uppercase text-teal-400 mb-4">
-        {eyebrow}
-      </p>
+      <SectionLabel index={index} text={eyebrow} />
       <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">{title}</h2>
       {subtitle && (
         <p className="text-lg text-white/60 max-w-2xl mx-auto text-balance">{subtitle}</p>
@@ -66,14 +84,13 @@ function SectionHeading({
   );
 }
 
-// Hero Section
+// Hero
 function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
-      {/* Background glows */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[480px] h-[480px] bg-royal-600/20 rounded-full blur-[160px]" />
         <div className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] bg-teal-500/15 rounded-full blur-[160px]" />
@@ -89,19 +106,22 @@ function HeroSection() {
           Growth &amp; Operations Consultancy
         </motion.p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-5xl sm:text-7xl font-bold tracking-tight leading-[1.05] mb-6"
-        >
-          Growth, <span className="gradient-text">engineered.</span>
-        </motion.h1>
+        <h1 className="text-5xl sm:text-7xl font-bold tracking-tight leading-[1.05] mb-6">
+          <StaggerWord text="Growth," delayStart={0.15} />{' '}
+          <motion.span
+            initial={{ opacity: 0, y: 46 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-block gradient-text"
+          >
+            engineered.
+          </motion.span>
+        </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
+          transition={{ duration: 0.7, delay: 0.8 }}
           className="text-xl text-white/65 max-w-2xl mx-auto mb-10 text-balance"
         >
           BLEUKEI helps ambitious businesses scale — marketing that wins attention,
@@ -111,7 +131,7 @@ function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
+          transition={{ duration: 0.7, delay: 0.95 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <a
@@ -132,22 +152,67 @@ function HeroSection() {
           </a>
         </motion.div>
       </div>
+
+      {/* Capability marquee */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.3 }}
+        className="absolute bottom-10 left-0 right-0 overflow-hidden marquee-mask"
+      >
+        <CapabilityMarquee />
+      </motion.div>
     </section>
   );
 }
 
-// Services Section — the four pillars
+function CapabilityMarquee() {
+  const capabilities = [
+    'Social Media',
+    'Brand Strategy',
+    'GEO + SEO',
+    'Partnerships & Sponsorships',
+    'AI Workflows',
+    'Lead Nurture',
+    'Process Design',
+    'Operations',
+    'Dashboards',
+    'Web Development',
+    'Integrations',
+    'AI Implementation',
+  ];
+  const doubled = [...capabilities, ...capabilities];
+  return (
+    <div className="flex w-max animate-marquee gap-3 px-3">
+      {doubled.map((cap, i) => (
+        <span
+          key={i}
+          className="flex items-center gap-2 whitespace-nowrap border border-white/10 rounded-full px-4 py-2 text-sm text-white/55"
+        >
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${i % 2 === 0 ? 'bg-teal-400' : 'bg-royal-400'}`}
+          />
+          {cap}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// Services — numbered editorial list
 function ServicesSection() {
   const services = [
     {
+      number: '01',
       icon: Megaphone,
       accent: 'text-royal-400',
       title: 'Marketing',
       description:
-        'Strategy and execution that gets you found and chosen.',
+        'Strategy and execution that gets you found and chosen — across search, social, and the rooms you are not in yet.',
       tags: ['Social Media', 'Brand Strategy', 'GEO + SEO', 'Partnerships & Sponsorships'],
     },
     {
+      number: '02',
       icon: Zap,
       accent: 'text-teal-400',
       title: 'Automation & AI',
@@ -156,6 +221,7 @@ function ServicesSection() {
       tags: ['AI Workflows', 'Lead Nurture', 'Reporting', 'Custom Agents'],
     },
     {
+      number: '03',
       icon: Settings2,
       accent: 'text-royal-400',
       title: 'Operations',
@@ -164,6 +230,7 @@ function ServicesSection() {
       tags: ['Process Design', 'Systems & SOPs', 'Dashboards', 'Time Recovery'],
     },
     {
+      number: '04',
       icon: Code2,
       accent: 'text-teal-400',
       title: 'Tech Development',
@@ -175,26 +242,49 @@ function ServicesSection() {
 
   return (
     <section id="services" className="py-24 sm:py-32 relative">
-      <div className="container mx-auto max-w-6xl px-4">
-        <SectionHeading
-          eyebrow="What We Do"
-          title="Four ways we move the needle"
-          subtitle="End-to-end growth: visibility on the front end, efficiency on the back end."
-        />
+      <div className="container mx-auto max-w-5xl px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          className="mb-12"
+        >
+          <p className="flex items-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-white/40 mb-5">
+            <span className="text-teal-400/80">(BK·01)</span>
+            <span>What We Do</span>
+          </p>
+          <div className="flex items-end justify-between flex-wrap gap-4">
+            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
+              Services <span className="text-white/30 font-light">(4)</span>
+            </h2>
+            <p className="text-white/50 max-w-sm text-sm leading-relaxed">
+              End-to-end growth: visibility on the front end, efficiency on the back end.
+            </p>
+          </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="border-t border-white/10">
           {services.map((service, i) => (
             <motion.div
-              key={service.title}
-              initial={{ opacity: 0, y: 24 }}
+              key={service.number}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className="group grid grid-cols-12 gap-4 sm:gap-8 py-10 border-b border-white/10 transition-colors hover:bg-white/[0.02] px-2 sm:px-4"
             >
-              <GlassCard className="p-8 h-full">
-                <service.icon className={`w-8 h-8 ${service.accent} mb-5`} />
-                <h3 className="text-2xl font-semibold mb-3">{service.title}</h3>
-                <p className="text-white/60 leading-relaxed mb-6">{service.description}</p>
+              <div className="col-span-2 sm:col-span-1">
+                <span className="text-sm font-bold gradient-text-teal">{service.number}</span>
+              </div>
+              <div className="col-span-10 sm:col-span-4 flex items-start gap-3">
+                <service.icon className={`w-6 h-6 mt-1 ${service.accent} shrink-0`} />
+                <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+                  {service.title}
+                </h3>
+              </div>
+              <div className="col-span-12 sm:col-span-7 sm:col-start-6">
+                <p className="text-white/60 leading-relaxed mb-5">{service.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {service.tags.map((tag) => (
                     <span
@@ -205,7 +295,7 @@ function ServicesSection() {
                     </span>
                   ))}
                 </div>
-              </GlassCard>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -214,7 +304,7 @@ function ServicesSection() {
   );
 }
 
-// Process Section
+// Process — giant numeral anchors
 function ProcessSection() {
   const steps = [
     {
@@ -250,6 +340,7 @@ function ProcessSection() {
       </div>
       <div className="container mx-auto max-w-6xl px-4 relative">
         <SectionHeading
+          index="02"
           eyebrow="How We Work"
           title="Complex growth, simplified"
           subtitle="A proven four-phase cycle that turns ambitious goals into measurable results."
@@ -263,12 +354,17 @@ function ProcessSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="relative glass rounded-2xl p-7 overflow-hidden"
             >
-              <GlassCard className="p-7 h-full" hover={false}>
-                <p className="text-sm font-bold gradient-text-teal mb-4">{step.number}</p>
-                <h3 className="text-xl font-semibold mb-3">{step.name}</h3>
-                <p className="text-white/55 text-sm leading-relaxed">{step.description}</p>
-              </GlassCard>
+              <span
+                aria-hidden
+                className="absolute -top-5 -right-2 text-[7rem] leading-none font-bold text-white/[0.05] select-none pointer-events-none"
+              >
+                {step.number}
+              </span>
+              <p className="text-sm font-bold gradient-text-teal mb-16">{step.number}</p>
+              <h3 className="text-xl font-semibold mb-3">{step.name}</h3>
+              <p className="text-white/55 text-sm leading-relaxed">{step.description}</p>
             </motion.div>
           ))}
         </div>
@@ -277,7 +373,7 @@ function ProcessSection() {
   );
 }
 
-// Why BLEUKEI Section
+// Why BLEUKEI
 function WhySection() {
   const points = [
     {
@@ -302,10 +398,13 @@ function WhySection() {
     },
   ];
 
+  const tools = ['Anthropic', 'OpenAI', 'Google', 'Meta', 'Shopify', 'Notion', 'Zapier', 'Cloudflare'];
+
   return (
     <section id="why" className="py-24 sm:py-32 relative">
       <div className="container mx-auto max-w-6xl px-4">
         <SectionHeading
+          index="03"
           eyebrow="Why BLEUKEI"
           title={
             <>
@@ -322,12 +421,116 @@ function WhySection() {
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
-              <GlassCard className="p-8 h-full" hover={false}>
+              <div className="glass rounded-2xl p-8 h-full">
                 <CheckCircle2 className="w-6 h-6 text-teal-400 mb-4" />
                 <h3 className="text-xl font-semibold mb-3">{point.title}</h3>
                 <p className="text-white/55 leading-relaxed">{point.description}</p>
-              </GlassCard>
+              </div>
             </motion.div>
+          ))}
+        </div>
+
+        {/* Tools strip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.8 }}
+          className="mt-20 text-center"
+        >
+          <p className="text-xs font-semibold tracking-[0.3em] uppercase text-white/30 mb-8">
+            Tools We Build With
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+            {tools.map((tool) => (
+              <span
+                key={tool}
+                className="text-lg font-semibold tracking-wide text-white/25 hover:text-white/50 transition-colors select-none"
+              >
+                {tool}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// FAQ
+function FaqItem({ q, a, index }: { q: string; a: string; index: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-white/10">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between gap-4 py-6 text-left group"
+        aria-expanded={open}
+      >
+        <span className="flex items-baseline gap-4">
+          <span className="text-xs font-bold text-teal-400/70">{index}</span>
+          <span className="font-medium text-lg text-white/90 group-hover:text-white transition-colors">
+            {q}
+          </span>
+        </span>
+        <Plus
+          className={`w-5 h-5 shrink-0 text-teal-400 transition-transform duration-200 ${
+            open ? 'rotate-45' : ''
+          }`}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <p className="pb-6 pl-9 text-white/55 leading-relaxed max-w-2xl">{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function FaqSection() {
+  const faqs = [
+    {
+      q: 'How long does it take to see results?',
+      a: 'Most clients see early indicators within 30 days — improved visibility, more leads, operational time savings. Meaningful revenue impact typically shows at 60 to 90 days as the systems compound. We set specific milestones upfront so you always know what to expect by when.',
+    },
+    {
+      q: 'How is BLEUKEI different from a marketing agency?',
+      a: 'Marketing agencies run campaigns. We build the underlying infrastructure that makes everything compound — operations, automation, visibility, and systems. The result is not just more leads; it is a business that runs better with less of your time.',
+    },
+    {
+      q: 'What does the process actually look like?',
+      a: 'Four phases: Clarity (we audit your business and identify the biggest opportunities), Strategy (a 90-day roadmap with specific goals and metrics), Execution (we implement alongside your team), and Optimization (we measure, iterate, and scale what works).',
+    },
+    {
+      q: 'How much does it cost?',
+      a: 'We quote based on scope after a free consultation, because every business is different. What we can tell you: pricing is project-based rather than hourly, transparent, and tied to defined deliverables. Book a free call and we will be direct about what makes sense.',
+    },
+    {
+      q: 'How do we get started?',
+      a: 'Book a free 30-minute consultation. We talk about your business, your challenges, and whether we are a fit. No pitch, no pressure. If it makes sense to work together, we outline a proposal within a few days.',
+    },
+  ];
+
+  return (
+    <section id="faq" className="py-24 sm:py-32 relative">
+      <div className="container mx-auto max-w-3xl px-4">
+        <SectionHeading
+          index="04"
+          eyebrow="Questions"
+          title="Answers, upfront"
+        />
+        <div className="border-t border-white/10">
+          {faqs.map((faq, i) => (
+            <FaqItem key={i} index={`0${i + 1}`} q={faq.q} a={faq.a} />
           ))}
         </div>
       </div>
@@ -335,7 +538,7 @@ function WhySection() {
   );
 }
 
-// Contact Section
+// Contact
 function ContactSection() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
@@ -367,14 +570,28 @@ function ContactSection() {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-teal-600/10 rounded-full blur-[180px]" />
       </div>
       <div className="container mx-auto max-w-5xl px-4 relative">
-        <SectionHeading
-          eyebrow="Get Started"
-          title="Ready to grow?"
-          subtitle="Book a free consultation, or tell us about your project and we will respond within one business day."
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <span className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 text-sm text-white/70 mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-400" />
+            </span>
+            Taking on select engagements
+          </span>
+          <h2 className="text-4xl sm:text-6xl font-bold tracking-tight mb-4">Ready to grow?</h2>
+          <p className="text-lg text-white/60 max-w-2xl mx-auto text-balance">
+            Book a free consultation, or tell us about your project and we will respond within
+            one business day.
+          </p>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Booking card */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -382,7 +599,7 @@ function ContactSection() {
             transition={{ duration: 0.5 }}
             className="lg:col-span-2"
           >
-            <GlassCard className="p-8 h-full flex flex-col justify-between glow-royal" hover={false}>
+            <div className="glass rounded-2xl p-8 h-full flex flex-col justify-between glow-royal">
               <div>
                 <Calendar className="w-8 h-8 text-royal-400 mb-5" />
                 <h3 className="text-2xl font-semibold mb-3">Book a free consultation</h3>
@@ -400,10 +617,9 @@ function ContactSection() {
                 <Calendar className="w-5 h-5" />
                 Schedule a Call
               </a>
-            </GlassCard>
+            </div>
           </motion.div>
 
-          {/* Contact form */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -411,7 +627,7 @@ function ContactSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="lg:col-span-3"
           >
-            <GlassCard className="p-8" hover={false}>
+            <div className="glass rounded-2xl p-8">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
@@ -489,7 +705,7 @@ function ContactSection() {
                   </p>
                 )}
               </form>
-            </GlassCard>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -554,6 +770,7 @@ export default function Home() {
       <ServicesSection />
       <ProcessSection />
       <WhySection />
+      <FaqSection />
       <ContactSection />
       <Footer />
     </main>
