@@ -10,15 +10,31 @@ module.exports = {
       colors: {
         background: '#000000',
         foreground: '#ffffff',
+        // Turquoise — primary accent
         teal: {
-          400: '#00d4aa',
-          500: '#0683a1',
-          600: '#056a82',
+          300: '#7ff5e9',
+          400: '#40e0d0',
+          500: '#1fc8b9',
+          600: '#16a095',
         },
+        turquoise: {
+          300: '#7ff5e9',
+          400: '#40e0d0',
+          500: '#1fc8b9',
+          600: '#16a095',
+        },
+        // Royal purple — secondary accent (legacy `coral` mapped here)
         coral: {
-          400: '#ff6b6b',
-          500: '#ff8585',
-          600: '#ff5252',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#7c3aed',
+        },
+        royal: {
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#7c3aed',
+          700: '#6d28d9',
         },
         glass: {
           DEFAULT: 'rgba(255, 255, 255, 0.05)',
