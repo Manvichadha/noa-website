@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import FloatingDock from '@/components/FloatingDock'
 
 import SmoothScroll from '@/components/SmoothScroll'
 import CustomCursor from '@/components/CustomCursor'
-import Header from '@/components/Header'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -45,10 +45,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-sans bg-black text-white min-h-screen antialiased cursor-none`}>
         <CustomCursor />
-        <Header />
         <SmoothScroll>
           {children}
         </SmoothScroll>
+        <FloatingDock />
       </body>
     </html>
   )
