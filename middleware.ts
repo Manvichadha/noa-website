@@ -13,8 +13,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // If the subdomain is 'www', root domain, or localhost, serve the main site
-  if (subdomain === 'www' || subdomain === 'bleukei-website' || hostname.includes('localhost')) {
+  // If the subdomain is 'www', root domain, localhost, or a Vercel preview domain, serve the main site
+  if (subdomain === 'www' || subdomain === 'bleukei-website' || hostname.includes('localhost') || hostname.includes('vercel.app')) {
     return NextResponse.next();
   }
     
