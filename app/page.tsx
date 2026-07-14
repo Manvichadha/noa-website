@@ -646,7 +646,7 @@ function ServicesSection() {
 
         {/* Row-based Interactive Layout */}
         <div 
-          className="flex flex-col gap-6 lg:gap-12 relative w-full"
+          className="flex flex-col gap-6 lg:gap-12 relative w-full pb-8 lg:pb-24"
           onMouseLeave={() => setHoveredIndex(null)}
         >
           {services.map((service, index) => {
