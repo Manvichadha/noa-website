@@ -87,7 +87,7 @@ export default function Header() {
             animate={{ y: 0 }}
             exit={{ y: '-100%' }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 bg-black text-white overflow-hidden flex flex-col pt-32 pb-12 px-6 md:px-12 lg:px-24"
+            className="fixed inset-0 z-40 bg-black text-white overflow-y-auto flex flex-col pt-32 pb-12 px-6 md:px-12 lg:px-24"
           >
             <div className="max-w-[1400px] mx-auto w-full h-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
               

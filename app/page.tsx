@@ -319,7 +319,7 @@ export default function Home() {
           </div>
 
           <div className="mt-12 flex justify-center">
-            <div className="group inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 rounded-full border border-white/20 font-medium text-white/60 hover:bg-white hover:text-black hover:border-white transition-colors duration-300 cursor-hover whitespace-nowrap text-sm md:text-base">
+            <div className="group inline-flex items-center justify-center px-6 md:px-10 py-4 md:py-5 rounded-3xl border border-white/20 font-medium text-white/60 hover:bg-white hover:text-black hover:border-white transition-colors duration-300 cursor-hover text-center text-sm md:text-base">
               No client names here, by design. We work quietly behind brands: your customers see you, not us. Discretion is part of the service.
             </div>
           </div>
