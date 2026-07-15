@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Copy } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,17 +19,17 @@ export default function Header() {
   }, []);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('bencelinskidigital@gmail.com'); // Placeholder, user will change
+    navigator.clipboard.writeText('nb@noaberger.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const navLinks = [
     { name: 'About', href: '/about' },
-    { name: 'Work', href: '/work' },
-    { name: 'Services', href: '/services' },
-    { name: 'FAQ', href: '/faq' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Work', href: '/#work' },
+    { name: 'Services', href: '/#services' },
+    { name: 'FAQ', href: '/#faq' },
+    { name: 'Founder', href: '/#hero' },
   ];
 
   return (
@@ -71,7 +71,7 @@ export default function Header() {
             </button>
 
             <Link 
-              href="#contact"
+              href="/#contact"
               className={`hidden md:block cursor-hover font-medium transition-colors duration-300 text-white border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black text-sm`}
             >
               Contact
@@ -124,10 +124,7 @@ export default function Header() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 1, delay: 0.4 }}
                 >
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/30 text-orange-400 text-xs font-medium mb-8">
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-                    Limited availability
-                  </div>
+
                   
                   <h3 className="text-3xl md:text-5xl font-bold leading-tight mb-12">
                     Want to start a project together?<br />
@@ -138,21 +135,20 @@ export default function Header() {
                     <div>
                       <h4 className="text-white/50 text-sm mb-4">Email</h4>
                       <div className="flex items-center gap-4">
-                        <span className="font-medium">contact@bleukei.com</span>
+                        <span className="font-medium">nb@noaberger.com</span>
                         <button 
                           onClick={handleCopy}
                           className="cursor-hover flex items-center gap-2 text-xs font-medium bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors"
                         >
-                          <Copy className="w-3 h-3" />
-                          {copied ? 'Copied!' : 'Copy to clipboard'}
+                          {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                         </button>
                       </div>
                     </div>
                     <div>
                       <h4 className="text-white/50 text-sm mb-4">Social</h4>
                       <div className="flex flex-col gap-2">
-                        <a href="#" className="cursor-hover font-medium hover:text-white/70 transition-colors">LinkedIn</a>
-                        <a href="#" className="cursor-hover font-medium hover:text-white/70 transition-colors">Twitter</a>
+                        <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer" className="cursor-hover font-medium hover:text-white/70 transition-colors">LinkedIn</a>
+                        <a href="https://www.instagram.com/noableu/" target="_blank" rel="noopener noreferrer" className="cursor-hover font-medium hover:text-white/70 transition-colors">Instagram</a>
                       </div>
                     </div>
                   </div>

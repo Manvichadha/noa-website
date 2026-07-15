@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Copy, Check } from 'lucide-react';
 
 export default function Footer() {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('NB@noaberger.com');
+    navigator.clipboard.writeText('nb@noaberger.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -46,12 +47,12 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <p className="text-sm font-mono text-white/30 uppercase tracking-widest mb-6">Email</p>
             <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-              <span className="text-2xl md:text-3xl font-light">NB@noaberger.com</span>
+              <span className="text-2xl md:text-3xl font-light">nb@noaberger.com</span>
               <button 
                 onClick={handleCopy}
                 className="cursor-hover inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors w-fit"
               >
-                {copied ? 'Copied!' : 'Copy to clipboard'}
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
           </div>

@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Plus, CheckCircle2, Calendar, ArrowRight, Megaphone, TrendingUp, Zap, Settings2, Code2 } from 'lucide-react';
+import { Plus, CheckCircle2, Calendar, ArrowRight, Megaphone, TrendingUp, Zap, Settings2, Code2, Copy, Check } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import HeroBackground from './components/HeroBackground';
 
 const TICKER_ITEMS = [
   "AI Workflows", "Lead Nurture", "Process Design", "Operations", 
@@ -12,28 +14,31 @@ const TICKER_ITEMS = [
 ];
 
 function Ticker() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % TICKER_ITEMS.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="absolute bottom-0 left-0 w-full overflow-hidden border-t border-b border-white/10 bg-[#0a0a0a] py-5 z-20">
-      <motion.div 
-        className="flex whitespace-nowrap"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, ease: "linear", duration: 10 }}
-      >
-        <div className="flex items-center">
-          {TICKER_ITEMS.map((item, i) => (
-            <div key={`a-${i}`} className="flex items-center">
-              <span className="text-white/80 uppercase tracking-[0.15em] text-sm font-semibold">{item}</span>
-              <span className="text-white/20 mx-10 text-sm">•</span>
-            </div>
-          ))}
-          {TICKER_ITEMS.map((item, i) => (
-            <div key={`b-${i}`} className="flex items-center">
-              <span className="text-white/80 uppercase tracking-[0.15em] text-sm font-semibold">{item}</span>
-              <span className="text-white/20 mx-10 text-sm">•</span>
-            </div>
-          ))}
-        </div>
-      </motion.div>
+    <div className="absolute bottom-12 left-0 w-full flex justify-center z-20">
+      <div className="h-8 w-full max-w-lg relative flex items-center justify-center overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="text-white/90 uppercase tracking-[0.25em] text-base md:text-lg font-bold absolute text-center drop-shadow-sm"
+          >
+            {TICKER_ITEMS[index]}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
@@ -46,7 +51,7 @@ function RevealLine({ children, delay = 0, className = "" }: { children: React.R
         initial={{ y: "105%" }}
         whileInView={{ y: "0%" }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+        transition={{ type: "spring", damping: 25, stiffness: 120, delay }}
         className={className}
       >
         {children}
@@ -62,7 +67,7 @@ function FadeInUp({ children, delay = 0, className = "" }: { children: React.Rea
       initial={{ y: 24, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ type: "spring", damping: 20, stiffness: 100, delay }}
       className={className}
     >
       {children}
@@ -70,58 +75,16 @@ function FadeInUp({ children, delay = 0, className = "" }: { children: React.Rea
   );
 }
 
-// Scroll-linked Door Opening Image Component
-function DoorImage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end start"]
-  });
 
-  // Slide left and right on scroll (opening effect - slightly slower by completing at 0.8)
-  const xLeft = useTransform(scrollYProgress, [0, 0.8], ["0%", "-100%"]);
-  const xRight = useTransform(scrollYProgress, [0, 0.8], ["0%", "100%"]);
-  
-  // Container scale (zoom out effect - increased from 1.2 to 1.4)
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1.4, 1]);
-
-  return (
-    <div ref={containerRef} className="w-full h-full relative overflow-hidden rounded-2xl">
-      {/* Background Image (visible as doors open) */}
-      <motion.div style={{ scale: bgScale }} className="absolute inset-0 z-0 origin-center">
-        <Image src="/images/image2.png" alt="Background" fill className="object-cover" priority />
-      </motion.div>
-
-      {/* Left Door */}
-      <motion.div 
-        style={{ x: xLeft }}
-        className="absolute top-0 left-0 w-1/2 h-full overflow-hidden z-10"
-      >
-        <div className="w-[200%] h-full relative">
-          <Image src="/images/image.png" alt="Bleukei Hero Left" fill className="object-cover" priority />
-        </div>
-      </motion.div>
-      
-      {/* Right Door */}
-      <motion.div 
-        style={{ x: xRight }}
-        className="absolute top-0 right-0 w-1/2 h-full overflow-hidden z-10"
-      >
-        <div className="w-[200%] h-full relative -left-[100%]">
-          <Image src="/images/image.png" alt="Bleukei Hero Right" fill className="object-cover" priority />
-        </div>
-      </motion.div>
-    </div>
-  );
-}
 
 export default function Home() {
   return (
     <main className="w-full">
 
       {/* 1. Header Hero Section */}
-      <section className="relative bg-black pt-48 pb-16 px-6 md:px-12 lg:px-24 min-h-screen flex flex-col justify-center">
-        <div className="max-w-[1400px] mx-auto w-full">
+      <section id="hero" className="relative bg-black pt-48 pb-16 px-6 md:px-12 lg:px-24 min-h-screen flex flex-col justify-center overflow-hidden">
+        <HeroBackground />
+        <div className="max-w-[1400px] mx-auto w-full relative z-10">
           <div className="max-w-5xl mx-auto flex flex-col items-center text-center">
 
             <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center justify-center flex-wrap">
@@ -131,7 +94,7 @@ export default function Home() {
                 </h1>
               </RevealLine>
               <RevealLine delay={0.2}>
-                <h1 className="text-[clamp(3.5rem,8vw,7.5rem)] leading-[1.05] font-bold tracking-[-0.02em] bg-gradient-to-r from-purple-500 to-cyan-400 text-transparent bg-clip-text pb-4">
+                <h1 className="text-[clamp(3.5rem,8vw,7.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-white">
                   engineered.
                 </h1>
               </RevealLine>
@@ -148,46 +111,135 @@ export default function Home() {
             </FadeInUp>
 
             <FadeInUp delay={0.5} className="mt-12 flex flex-col sm:flex-row items-center gap-4">
-              <a href="https://calendar.app.google/9HkGH8jzjx82fwfk8" target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-white/90 transition-colors">
+              <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href="https://calendar.app.google/9HkGH8jzjx82fwfk8" target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-lg font-medium hover:bg-white/90 transition-colors">
                 <Calendar className="w-4 h-4" />
                 Book a Call
-              </a>
-              <a href="#contact" className="group inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors">
+              </motion.a>
+              <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href="#contact" className="group inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors">
                 Tell Us About Your Project
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </motion.a>
             </FadeInUp>
           </div>
         </div>
         <Ticker />
       </section>
 
-      {/* 2. Full Image Reveal Section */}
-      <section className="bg-black px-6 md:px-12 lg:px-24 pb-24">
-        <div className="max-w-[1400px] mx-auto w-full">
-          <motion.div
-            initial={{ scale: 1.1, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full aspect-[4/3] md:aspect-[16/9] bg-white/5 overflow-hidden relative rounded-2xl"
-          >
-            <DoorImage />
-          </motion.div>
-        </div>
-      </section>
 
       {/* 3. Services Section */}
       <ServicesSection />
 
+      {/* 5. How We Work (BK-02) Section */}
+      <section id="work" className="bg-[#FAF9F6] pt-16 pb-24 px-6 md:px-12 lg:px-24">
+        <div className="max-w-[1400px] mx-auto w-full">
+          
+          <FadeInUp>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-24">
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="text-black/70 text-sm font-bold tracking-[0.2em]">(BK-02)</span>
+                  <span className="text-black/50 text-sm font-bold tracking-[0.2em] uppercase">How we work</span>
+                </div>
+                <h2 className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-bold tracking-tight text-[#1A1A1A] flex items-center gap-4">
+                  Complex growth, simplified
+                </h2>
+              </div>
+              <p className="text-[#1A1A1A]/60 max-w-sm text-sm md:text-base leading-relaxed">
+                A proven four-phase cycle that turns ambitious goals into measurable results.
+              </p>
+            </div>
+          </FadeInUp>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20 lg:gap-x-24 lg:gap-y-24">
+            
+            {/* Item 1 */}
+            <FadeInUp delay={0.1}>
+              <div className="relative group pt-8">
+                <div className="absolute top-0 right-0 md:-right-8 -translate-y-12 md:-translate-y-16 text-[10rem] md:text-[14rem] font-bold text-black/[0.03] leading-none pointer-events-none select-none transition-transform duration-700 group-hover:scale-105">
+                  01
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-2xl md:text-3xl font-medium text-[#1A1A1A] mb-4">Clarity</h3>
+                  <p className="text-[#1A1A1A]/70 text-base md:text-lg leading-relaxed">
+                    We audit your business: what is working, what is leaking time and money, and where the biggest opportunities sit. No templates, no assumptions.
+                  </p>
+                </div>
+              </div>
+            </FadeInUp>
+
+            {/* Item 2 */}
+            <FadeInUp delay={0.2}>
+              <div className="relative group pt-8">
+                <div className="absolute top-0 right-0 md:-right-8 -translate-y-12 md:-translate-y-16 text-[10rem] md:text-[14rem] font-bold text-black/[0.03] leading-none pointer-events-none select-none transition-transform duration-700 group-hover:scale-105">
+                  02
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-2xl md:text-3xl font-medium text-[#1A1A1A] mb-4">Strategy</h3>
+                  <p className="text-[#1A1A1A]/70 text-base md:text-lg leading-relaxed">
+                    A 90-day roadmap with specific goals, specific tactics, and clear success metrics. You know exactly what we are doing and why.
+                  </p>
+                </div>
+              </div>
+            </FadeInUp>
+
+            {/* Item 3 */}
+            <FadeInUp delay={0.3}>
+              <div className="relative group pt-8">
+                <div className="absolute top-0 right-0 md:-right-8 -translate-y-12 md:-translate-y-16 text-[10rem] md:text-[14rem] font-bold text-black/[0.03] leading-none pointer-events-none select-none transition-transform duration-700 group-hover:scale-105">
+                  03
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-2xl md:text-3xl font-medium text-[#1A1A1A] mb-4">Execution</h3>
+                  <p className="text-[#1A1A1A]/70 text-base md:text-lg leading-relaxed">
+                    We build and implement alongside your team: campaigns, systems, and automation working together, not in silos.
+                  </p>
+                </div>
+              </div>
+            </FadeInUp>
+
+            {/* Item 4 */}
+            <FadeInUp delay={0.4}>
+              <div className="relative group pt-8">
+                <div className="absolute top-0 right-0 md:-right-8 -translate-y-12 md:-translate-y-16 text-[10rem] md:text-[14rem] font-bold text-black/[0.03] leading-none pointer-events-none select-none transition-transform duration-700 group-hover:scale-105">
+                  04
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-2xl md:text-3xl font-medium text-[#1A1A1A] mb-4">Optimization</h3>
+                  <p className="text-[#1A1A1A]/70 text-base md:text-lg leading-relaxed">
+                    We measure against targets, scale what works, and kill what does not. Growth compounds; so does our work.
+                  </p>
+                </div>
+              </div>
+            </FadeInUp>
+
+          </div>
+        </div>
+      </section>
+
       {/* 4. Showcase Section */}
-      <section className="bg-black py-32 px-6 md:px-12 lg:px-24">
+      <section className="bg-black pt-16 pb-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-[1400px] mx-auto w-full">
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-24">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-24">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-white/70 text-sm font-bold tracking-[0.2em]">(BK-03)</span>
+                <span className="text-white/50 text-sm font-bold tracking-[0.2em] uppercase">Real Builds</span>
+              </div>
+              <h2 className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-bold tracking-tight text-white flex items-center gap-4">
+                Built, shipped, running
+              </h2>
+            </div>
+            <p className="text-white/50 max-w-sm text-sm md:text-base leading-relaxed lg:text-right">
+              A few of the systems working for clients right now, from marketing firms and restaurants to hospitality hosts and growing service businesses.
+            </p>
+          </div>
 
-            {/* Project 1 - Spans 7 cols */}
-            <div className="md:col-span-7">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Project 1 */}
+            <div className="w-full">
               <FadeInUp>
                 <div className="group cursor-project cursor-none block">
                   <div className="w-full aspect-[4/3] bg-white/5 rounded-xl mb-6 overflow-hidden relative">
@@ -198,17 +250,25 @@ export default function Home() {
                       <Image src="/images/project_1_hover.png" alt="Project 1 Hover" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2 text-white">Project #1</h3>
-                  <p className="text-white/60 max-w-md">Tempora atque omnis facere dignissimos libero dolor velit et laboriosam.</p>
+                  <div className="mt-8">
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="text-white/40 font-bold tracking-widest text-lg">01</span>
+                      <div className="w-10 h-[1px] bg-white/20" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-4">Autonomous sales agent</h3>
+                    <p className="text-base text-white/80 leading-relaxed font-light">
+                      Discovers the right prospects, reaches out, logs everything into the CRM, books the call, and keeps watching for reasons to follow up: a promotion, a product launch, a job change.
+                    </p>
+                  </div>
                 </div>
               </FadeInUp>
             </div>
 
-            {/* Project 2 - Spans 5 cols, pushed down */}
-            <div className="md:col-span-5 md:mt-32">
+            {/* Project 2 */}
+            <div className="w-full">
               <FadeInUp delay={0.2}>
                 <div className="group cursor-project cursor-none block">
-                  <div className="w-full aspect-[4/5] bg-white/5 rounded-xl mb-6 overflow-hidden relative">
+                  <div className="w-full aspect-[4/3] bg-white/5 rounded-xl mb-6 overflow-hidden relative">
                     <div className="absolute inset-0 z-10 transition-opacity duration-500 group-hover:opacity-0">
                       <Image src="/images/project_2.png" alt="Project 2" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
@@ -216,17 +276,25 @@ export default function Home() {
                       <Image src="/images/project_2_hover.png" alt="Project 2 Hover" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2 text-white">Project #2</h3>
-                  <p className="text-white/60 max-w-sm">Consequuntur accusantium animi aut aperiam dolores velit vel.</p>
+                  <div className="mt-8">
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="text-white/40 font-bold tracking-widest text-lg">02</span>
+                      <div className="w-10 h-[1px] bg-white/20" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-4">Self-improving content engine</h3>
+                    <p className="text-base text-white/80 leading-relaxed font-light">
+                      Turns founder thinking and market signals into ideas, copy, and scheduled posts. Reviews its own metrics, learns what works and what the client prefers, and improves over time, with human approval at every level.
+                    </p>
+                  </div>
                 </div>
               </FadeInUp>
             </div>
 
-            {/* Project 3 - Full width */}
-            <div className="md:col-span-12">
-              <FadeInUp>
+            {/* Project 3 */}
+            <div className="w-full">
+              <FadeInUp delay={0.4}>
                 <div className="group cursor-project cursor-none block">
-                  <div className="w-full aspect-[21/9] bg-white/5 rounded-xl mb-6 overflow-hidden relative">
+                  <div className="w-full aspect-[4/3] bg-white/5 rounded-xl mb-6 overflow-hidden relative">
                     <div className="absolute inset-0 z-10 transition-opacity duration-500 group-hover:opacity-0">
                       <Image src="/images/project_3.png" alt="Project 3" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
@@ -234,49 +302,149 @@ export default function Home() {
                       <Image src="/images/project_3_hover.png" alt="Project 3 Hover" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2 text-white">Project #3</h3>
-                  <p className="text-white/60 max-w-2xl">Odit hic facere adipisci ipsam corrupti voluptatibus ipsum officiis et. Reprehenderit consequatur ipsa aut.</p>
+                  <div className="mt-8">
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="text-white/40 font-bold tracking-widest text-lg">03</span>
+                      <div className="w-10 h-[1px] bg-white/20" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-4">Visibility infrastructure</h3>
+                    <p className="text-base text-white/80 leading-relaxed font-light">
+                      Websites built to surface in Google search, AI answers, and Google Maps, backed by the reviews, photos, and signals that mark a business as the leader in its space.
+                    </p>
+                  </div>
                 </div>
               </FadeInUp>
             </div>
 
           </div>
 
-          <div className="mt-32 flex justify-center">
-            <a href="#work" className="group inline-flex items-center justify-center px-10 py-5 rounded-full border border-white font-semibold text-white hover:bg-white hover:text-black transition-colors duration-300 cursor-hover">
-              See more work
-            </a>
+          <div className="mt-12 flex justify-center">
+            <div className="group inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 rounded-full border border-white/20 font-medium text-white/60 hover:bg-white hover:text-black hover:border-white transition-colors duration-300 cursor-hover whitespace-nowrap text-sm md:text-base">
+              No client names here, by design. We work quietly behind brands: your customers see you, not us. Discretion is part of the service.
+            </div>
           </div>
 
         </div>
       </section>
 
-      {/* 5. Clients / Logos */}
+      {/* 5.5. Why BLEUKEI (BK-04) */}
+      <section className="bg-[#FAF9F6] pt-16 pb-0 px-6 md:px-12 lg:px-24">
+        <div className="max-w-[1400px] mx-auto w-full">
+          <div className="flex flex-col mb-24">
+            <FadeInUp>
+              <div className="text-black/50 text-sm tracking-widest uppercase mb-6 font-medium">(BK-04) Why BLEUKEI</div>
+            </FadeInUp>
+            <RevealLine>
+              <h2 className="text-[clamp(3rem,6vw,5.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-[#1A1A1A] pb-4">
+                Built different, <span className="italic font-light text-black/40">on purpose.</span>
+              </h2>
+            </RevealLine>
+          </div>
+
+          <div className="flex flex-col">
+            {[
+              {
+                num: "01",
+                title: "Builders, not just advisors",
+                text: "We do not hand you a strategy deck and disappear. We build and run the systems: automation, tools, and infrastructure that keep working after the engagement."
+              },
+              {
+                num: "02",
+                title: "Founder-led, every engagement",
+                text: "You work directly with the founder. No account managers, no hand-offs to junior staff. The thinking that builds the strategy is the same presence that executes it."
+              },
+              {
+                num: "03",
+                title: "AI-native by default",
+                text: "Every system we build leverages AI where it actually helps: not as a buzzword, but as leverage that lets a small team operate like a big one."
+              },
+              {
+                num: "04",
+                title: "Results-first, always measurable",
+                text: "Clear baselines in week one. If we cannot tie a metric to revenue, leads, or time saved, we do not track it."
+              }
+            ].map((item, i) => (
+              <FadeInUp key={i} delay={i * 0.1}>
+                <motion.div whileHover={{ x: 10 }} className="group grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 py-12 md:py-16 border-t border-black/10 hover:bg-black/[0.03] transition-all duration-300 -mx-6 px-6 md:-mx-12 md:px-12 lg:-mx-24 lg:px-24 cursor-default">
+                  <div className="md:col-span-2">
+                    <span className="text-sm font-medium text-black/30 tracking-widest uppercase transition-colors group-hover:text-[#1A332B]">[{item.num}]</span>
+                  </div>
+                  <div className="md:col-span-4">
+                    <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#1A1A1A] transition-colors group-hover:text-black">{item.title}</h3>
+                  </div>
+                  <div className="md:col-span-6">
+                    <p className="text-lg md:text-xl text-black/60 leading-relaxed font-light transition-colors group-hover:text-black/80">{item.text}</p>
+                  </div>
+                </motion.div>
+              </FadeInUp>
+            ))}
+            <div className="border-t border-black/10 -mx-6 md:-mx-12 lg:-mx-24"></div>
+          </div>
+
+          <FadeInUp delay={0.4}>
+            <div className="-mx-6 md:-mx-12 lg:-mx-24 bg-[#1A332B] py-16 flex flex-col items-center">
+              <span className="text-white/40 text-xs tracking-[0.2em] uppercase mb-10 font-semibold">Tools we build with</span>
+              <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 text-white/90 font-bold text-xl md:text-2xl lg:text-3xl px-6 max-w-[1200px]">
+                {['Anthropic', 'OpenAI', 'Google', 'Meta', 'Shopify', 'Notion', 'Zapier', 'Cloudflare'].map((tool, index) => (
+                  <motion.span 
+                    whileHover={{ scale: 1.15, y: -4, rotate: index % 2 === 0 ? 3 : -3 }}
+                    key={tool} 
+                    className="cursor-default tracking-tight hover:text-white transition-colors"
+                  >
+                    {tool}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+          </FadeInUp>
+        </div>
+      </section>
+
+      {/* 6. Founder Section */}
       <section className="bg-[#0a0a0a] py-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-[1400px] mx-auto w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+            
             <div className="self-start">
               <FadeInUp>
-                <p className="text-[clamp(1.1rem,1.5vw,1.5rem)] leading-relaxed text-white/80 font-light max-w-md">
-                  Over the years I have worked with very diverse clients. I have a proven track record working with marketers, product managers, designers and developers.
+                <div className="text-white/50 text-sm tracking-widest uppercase mb-8">(BK-05) The Founder</div>
+              </FadeInUp>
+              <RevealLine>
+                <h2 className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-bold tracking-tight text-white mb-6">
+                  Noa Berger
+                </h2>
+              </RevealLine>
+            </div>
+
+            <div className="flex flex-col gap-8 self-start">
+              <FadeInUp delay={0.1}>
+                <p className="text-[clamp(1.1rem,1.5vw,1.5rem)] leading-relaxed text-white/80 font-light">
+                  Noa spent years in sports sponsorship brokerage watching how serious brands operate: the strategy, the systems, and the playbooks that make everything compound. BLEUKEI exists to bring that same infrastructure, plus the AI leverage big companies take for granted, to businesses that never had access to it.
                 </p>
               </FadeInUp>
+              <FadeInUp delay={0.2}>
+                <p className="text-[clamp(1.1rem,1.5vw,1.5rem)] leading-relaxed text-white/80 font-light">
+                  Every engagement is run by Noa directly. The person who builds your strategy is the person who executes it with you.
+                </p>
+              </FadeInUp>
+              <FadeInUp delay={0.3}>
+                <div className="flex flex-wrap gap-6 mt-4">
+                  <a href="https://noaberger.com/" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors border-b border-white/20 hover:border-white pb-1 font-medium">
+                    More about Noa <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                  <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors border-b border-white/20 hover:border-white pb-1 font-medium">
+                    LinkedIn <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </FadeInUp>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <FadeInUp key={i} delay={i * 0.1}>
-                  <div className="aspect-square bg-white/5 rounded-lg flex items-center justify-center p-4">
-                    <div className="w-12 h-12 rounded-full bg-white/10" />
-                  </div>
-                </FadeInUp>
-              ))}
-            </div>
+
           </div>
         </div>
       </section>
 
       {/* 6. FAQ */}
-      <section className="bg-black py-32 px-6 md:px-12 lg:px-24">
+      <section id="faq" className="bg-black py-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-[1400px] mx-auto w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
 
@@ -296,10 +464,26 @@ export default function Home() {
             <div className="lg:col-span-7">
               <div className="border-t border-white/10">
                 {[
-                  { q: "What is your process?", a: "I start by understanding your core business needs..." },
-                  { q: "How much do you charge?", a: "Every project is custom, so pricing varies based on scope." },
-                  { q: "Do you work with startups?", a: "Yes, I specialize in scaling ambitious startups." },
-                  { q: "What tools do you use?", a: "Next.js, Framer Motion, and a suite of no-code tools." }
+                  { 
+                    q: "How long does it take to see results?", 
+                    a: "Most clients see early indicators within 30 days: improved visibility, more leads, operational time savings. Meaningful revenue impact typically shows at 60 to 90 days as the systems compound. We set specific milestones upfront so you always know what to expect by when." 
+                  },
+                  { 
+                    q: "How is BLEUKEI different from a marketing agency?", 
+                    a: "Marketing agencies run campaigns. We build the underlying infrastructure that makes everything compound: operations, automation, visibility, and systems. The result is not just more leads; it is a business that runs better with less of your time." 
+                  },
+                  { 
+                    q: "What does the process actually look like?", 
+                    a: "Four phases: Clarity (we audit your business and identify the biggest opportunities), Strategy (a 90-day roadmap with specific goals and metrics), Execution (we implement alongside your team), and Optimization (we measure, iterate, and scale what works)." 
+                  },
+                  { 
+                    q: "How much does it cost?", 
+                    a: "Every engagement is scoped to your needs, timeline, budget, and how hands-on you want us to be. Pricing is project-based rather than hourly, transparent, and tied to defined deliverables. You will leave your free call with a clear ballpark, not a sales pitch." 
+                  },
+                  {
+                    q: "How do we get started?",
+                    a: "Book a free 30-minute consultation. We talk about your business, your challenges, and whether we are a fit. No pitch, no pressure. If it makes sense to work together, we outline a proposal within a few days."
+                  }
                 ].map((faq, i) => (
                   <FAQItem key={i} question={faq.q} answer={faq.a} index={i} />
                 ))}
@@ -317,10 +501,7 @@ export default function Home() {
       <footer className="bg-[#0a0a0a] text-white pt-32 pb-12 px-6 md:px-12 lg:px-24 rounded-t-[3rem]">
         <div className="max-w-[1400px] mx-auto w-full">
           <div className="mb-32">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/30 text-orange-400 text-xs font-medium mb-12">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-              Limited availability
-            </div>
+
 
             <RevealLine>
               <h2 className="text-[clamp(3rem,6vw,6rem)] leading-[1] font-bold tracking-[-0.02em]">
@@ -343,9 +524,9 @@ export default function Home() {
             <div>
               <h4 className="text-white/50 text-sm mb-4">Email</h4>
               <div className="flex items-center gap-4">
-                <span className="text-xl md:text-2xl font-medium text-white">contact@bleukei.com</span>
-                <button className="cursor-hover flex items-center gap-2 text-xs font-medium bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-colors">
-                  Copy to clipboard
+                <span className="text-xl md:text-2xl font-medium text-white">nb@noaberger.com</span>
+                <button className="cursor-hover flex items-center justify-center text-xs font-medium bg-white/10 hover:bg-white/20 p-2.5 rounded-lg transition-colors">
+                  <Copy className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -354,15 +535,15 @@ export default function Home() {
               <div>
                 <h4 className="text-white/50 text-sm mb-4">Social</h4>
                 <div className="flex flex-col gap-2">
-                  <a href="#" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">LinkedIn</a>
-                  <a href="#" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">Twitter</a>
+                  <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">LinkedIn</a>
+                  <a href="https://www.instagram.com/noableu/" target="_blank" rel="noopener noreferrer" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">Instagram</a>
                 </div>
               </div>
               <div>
                 <h4 className="text-white/50 text-sm mb-4">Legal</h4>
                 <div className="flex flex-col gap-2">
-                  <a href="#" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">Privacy Policy</a>
-                  <a href="#" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">Terms of Service</a>
+                  <Link href="/privacy-policy" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">Privacy Policy</Link>
+                  <Link href="/about" className="cursor-hover font-medium hover:text-white/70 text-lg transition-colors">About</Link>
                 </div>
               </div>
             </div>
@@ -431,13 +612,7 @@ function ContactSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm text-white/70 mb-6 border border-white/10 bg-white/5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400" />
-            </span>
-            Taking on select engagements
-          </span>
+
           <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-white mb-4">
             Ready to grow?
           </h2>
@@ -626,17 +801,17 @@ function ServicesSection() {
   ];
 
   return (
-    <section id="services" className="bg-[#0a0a0a] py-32 px-6 md:px-12 lg:px-24 min-h-screen flex items-center">
+    <section id="services" className="bg-[#0a0a0a] pt-16 pb-32 px-6 md:px-12 lg:px-24">
       <div className="max-w-[1400px] mx-auto w-full">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-24">
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-white/40 text-sm font-bold tracking-[0.2em]">(BK-01)</span>
-              <span className="text-white/20 text-sm font-bold tracking-[0.2em] uppercase">What we do</span>
+              <span className="text-white/70 text-sm font-bold tracking-[0.2em]">(BK-01)</span>
+              <span className="text-white/50 text-sm font-bold tracking-[0.2em] uppercase">What we do</span>
             </div>
             <h2 className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-bold tracking-tight text-white flex items-center gap-4">
-              Services <span className="text-white/20 font-light text-[clamp(2rem,3vw,3rem)]">(5)</span>
+              Services <span className="text-white/50 font-light text-[clamp(2rem,3vw,3rem)]">(5)</span>
             </h2>
           </div>
           <p className="text-white/50 max-w-sm text-sm md:text-base leading-relaxed">

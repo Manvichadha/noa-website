@@ -86,7 +86,7 @@ export default function CustomCursor() {
           animate={{ opacity: hoverType === 'project' ? 1 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          View<br/>Project
+          
         </motion.span>
       </motion.div>
     </motion.div>
