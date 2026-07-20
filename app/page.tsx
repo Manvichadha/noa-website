@@ -401,7 +401,7 @@ export default function Home() {
       </section>
 
       {/* 6. Founder Section */}
-      <section className="bg-[#0a0a0a] py-32 px-6 md:px-12 lg:px-24">
+      <section id="founder" className="bg-[#0a0a0a] py-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-[1400px] mx-auto w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
             
