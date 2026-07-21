@@ -1,250 +1,283 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, ArrowRight, Linkedin, Instagram, Mail, Copy } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  phone: string;
-  businessName: string;
-  message: string;
+// --- Utility Components ---
+function RevealLine({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) {
+  return (
+    <div className={`overflow-hidden ${className}`}>
+      <motion.div
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
 }
 
-const Contact = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormData>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+function FadeInUp({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+// -------------------------
 
-  const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-    
+export default function ContactPage() {
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('sending');
+    const form = e.currentTarget;
+    const data = new FormData(form);
     try {
       const response = await fetch('https://formspree.io/f/xqedgjon', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(data),
+        body: data,
+        headers: { Accept: 'application/json' },
       });
-      
       if (response.ok) {
-        setSubmitStatus('success');
-        reset();
+        setStatus('success');
+        form.reset();
       } else {
-        setSubmitStatus('error');
+        setStatus('error');
       }
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      setStatus('error');
     }
   };
 
   return (
-    <div className="bg-black text-white min-h-screen">
-      {/* Hero */}
-      <section className="py-20 px-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="container mx-auto text-center"
-        >
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">
-            Let's <span className="text-teal-400">Talk</span>
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Ready to transform your business? Book a free consultation or send us a message.
-          </p>
-        </motion.div>
-      </section>
-
-      {/* Booking Calendar */}
-      <section className="py-12 px-4 bg-gradient-to-b from-black to-gray-900">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-8"
-          >
-            <h2 className="text-3xl font-bold mb-4">Book a Free Consultation</h2>
-            <p className="text-gray-300">Choose a time that works for you. No commitment required.</p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="border border-white/10 rounded-2xl p-10 text-center space-y-6"
-            style={{ background: 'linear-gradient(135deg, rgba(45,212,191,0.05) 0%, rgba(0,0,0,0) 100%)' }}
-          >
-            <div className="text-5xl">📅</div>
-            <div>
-              <p className="text-white text-xl font-semibold mb-2">30-Minute Strategy Call</p>
-              <p className="text-gray-400 text-sm max-w-md mx-auto">
-                Pick a time that works for you. We'll discuss your goals, current challenges, and how AI automation can help.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a
-                href="https://calendar.app.google/9HkGH8jzjx82fwfk8"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 rounded-xl transition-all hover:scale-[1.02]"
-              >
-                <span>📆</span> Book a Free Call
-              </a>
-            </div>
-            <p className="text-gray-500 text-xs">Opens Google Calendar · No credit card required</p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Form */}
-      <section className="py-12 px-4">
-        <div className="container mx-auto max-w-2xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-12"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">Send Us a Message</h2>
-            
-            {submitStatus === 'success' && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 mb-6 text-center"
-              >
-                <p className="text-green-400 font-semibold">✓ Message sent successfully!</p>
-                <p className="text-gray-300 text-sm mt-1">We'll get back to you within 24 hours.</p>
-              </motion.div>
-            )}
-            
-            {submitStatus === 'error' && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-6 text-center"
-              >
-                <p className="text-red-400 font-semibold">✗ Something went wrong</p>
-                <p className="text-gray-300 text-sm mt-1">Please try again or email us directly.</p>
-              </motion.div>
-            )}
-            
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">Name *</label>
-                <input
-                  {...register('name', { required: 'Name is required' })}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-400 transition-colors"
-                  placeholder="Your name"
-                />
-                {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Email *</label>
-                <input
-                  type="email"
-                  {...register('email', { 
-                    required: 'Email is required',
-                    pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' }
-                  })}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-400 transition-colors"
-                  placeholder="you@company.com"
-                />
-                {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Phone</label>
-                <input
-                  type="tel"
-                  {...register('phone')}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-400 transition-colors"
-                  placeholder="(555) 123-4567"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Business Name *</label>
-                <input
-                  {...register('businessName', { required: 'Business name is required' })}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-400 transition-colors"
-                  placeholder="Your business name"
-                />
-                {errors.businessName && <p className="text-red-400 text-sm mt-1">{errors.businessName.message}</p>}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Message *</label>
-                <textarea
-                  {...register('message', { required: 'Message is required' })}
-                  rows={5}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-400 transition-colors resize-none"
-                  placeholder="Tell us about your project..."
-                />
-                {errors.message && <p className="text-red-400 text-sm mt-1">{errors.message.message}</p>}
-              </div>
-              
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-teal-500 hover:bg-teal-600 disabled:bg-teal-500/50 text-white font-semibold py-4 rounded-lg transition-all hover:scale-[1.02] disabled:scale-100"
-              >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Direct Contact */}
-      <section className="py-12 px-4 bg-gradient-to-b from-black to-gray-900">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="container mx-auto text-center"
-        >
-          <h2 className="text-3xl font-bold mb-8">Or Reach Out Directly</h2>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-            <a 
-              href="mailto:NB@noaberger.com" 
-              className="flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors"
-            >
-              <span>✉️</span> NB@noaberger.com
-            </a>
-            <Link
-              href="https://www.linkedin.com/in/noabberger/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors"
-            >
-              <span>💼</span> LinkedIn
-            </Link>
-            <Link
-              href="https://www.instagram.com/noableu/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors"
-            >
-              <span>📸</span> Instagram
-            </Link>
+    <main className="bg-black min-h-screen pt-32">
+      {/* Hero Section */}
+      <section className="px-6 md:px-12 lg:px-24 mb-24">
+        <div className="max-w-[1400px] mx-auto w-full">
+          <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-start flex-wrap">
+            <RevealLine>
+              <h1 className="text-[clamp(3.5rem,8vw,7.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-white">
+                Get in touch
+              </h1>
+            </RevealLine>
           </div>
-        </motion.div>
+          <FadeInUp delay={0.2} className="mt-6 max-w-2xl">
+            <p className="text-[clamp(1.1rem,1.5vw,1.5rem)] leading-relaxed text-white/80 font-light">
+              Book a free consultation, or tell us about your project and we will respond within one business day.
+            </p>
+          </FadeInUp>
+        </div>
       </section>
-    </div>
-  );
-};
 
-export default Contact;
+      {/* Main Content (Forms & Cards) */}
+      <section className="px-6 md:px-12 lg:px-24 pb-32">
+        <div className="max-w-[1400px] mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            
+            {/* Booking Card */}
+            <FadeInUp delay={0.4} className="lg:col-span-2">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-8 h-full flex flex-col justify-between relative overflow-hidden">
+                <div className="relative z-10">
+                  <Calendar className="w-6 h-6 text-white mb-5" />
+                  <h3 className="text-2xl font-bold mb-3 text-white">Book a free consultation</h3>
+                  <p className="text-[#A3A3A3] leading-relaxed mb-8">
+                    Thirty minutes, no pitch, no pressure. We talk about your business and whether we are a fit.
+                  </p>
+                </div>
+                <a
+                  href="https://calendar.app.google/9HkGH8jzjx82fwfk8"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="relative z-10 inline-flex justify-center items-center gap-2 bg-white text-black font-semibold px-6 py-4 rounded-xl transition-colors w-full hover:bg-white/90"
+                >
+                  <Calendar className="w-4 h-4" />
+                  Schedule a Call
+                </a>
+              </div>
+            </FadeInUp>
+
+            {/* Form Card */}
+            <FadeInUp delay={0.5} className="lg:col-span-3">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label htmlFor="name" className="block text-sm text-[#A3A3A3] mb-2">
+                        Name
+                      </label>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        required
+                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-[#A3A3A3] focus:outline-none focus:border-white/30 transition-colors"
+                        placeholder="Your name"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm text-[#A3A3A3] mb-2">
+                        Email
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-[#A3A3A3] focus:outline-none focus:border-white/30 transition-colors"
+                        placeholder="you@company.com"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="company" className="block text-sm text-[#A3A3A3] mb-2">
+                      Company
+                    </label>
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-[#A3A3A3] focus:outline-none focus:border-white/30 transition-colors"
+                      placeholder="Your business"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm text-[#A3A3A3] mb-2">
+                      Tell us about your project
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      required
+                      rows={6}
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-[#A3A3A3] focus:outline-none focus:border-white/30 transition-colors resize-none"
+                      placeholder="What are you trying to grow, fix, or build?"
+                    />
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    disabled={status === 'sending' || status === 'success'}
+                    className="inline-flex items-center gap-2 bg-white text-black font-semibold py-3 px-6 rounded-xl transition-all hover:bg-white/90 disabled:opacity-50"
+                  >
+                    {status === 'sending' ? (
+                      'Sending...'
+                    ) : status === 'success' ? (
+                      '✓ Message Sent'
+                    ) : (
+                      <>
+                        <ArrowRight className="w-4 h-4" />
+                        Send Message
+                      </>
+                    )}
+                  </button>
+                  {status === 'success' && (
+                    <div className="mt-4 rounded-xl border border-teal-500/30 bg-teal-500/10 px-5 py-4">
+                      <p className="text-sm text-teal-300 font-medium">Thanks for reaching out. We read every message and respond within one business day.</p>
+                    </div>
+                  )}
+                  {status === 'error' && (
+                    <p className="mt-4 text-sm text-red-400">
+                      Something went wrong. Please try again or email us at {['nb', '@', 'noaberger.com'].join('')}
+                    </p>
+                  )}
+                </form>
+              </div>
+            </FadeInUp>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Section (Matching layout on homepage) */}
+      <footer className="bg-[#0a0a0a] text-white pt-12 pb-4 px-6 md:px-12 lg:px-24">
+        <div className="max-w-[1400px] mx-auto w-full">
+          <div className="border-t border-white/10 pt-8 pb-2">
+            {/* Top Half: Columns */}
+            <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-8">
+              
+              {/* Col 1: Logo */}
+              <div className="md:w-1/3">
+                <div className="relative h-8 w-28">
+                  <Image src="/images/bleukei-logo-dark.png" alt="BLEUKEI" fill className="object-contain object-left" />
+                </div>
+              </div>
+
+              {/* Cols 2-4: Links */}
+              <div className="md:w-2/3 grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+                <div className="flex flex-col gap-4">
+                  <Link 
+                  href="/#services" 
+                  onClick={(e) => {
+                    if (window.location.pathname !== '/') {
+                      setTimeout(() => {
+                        const el = document.getElementById('services');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }, 600);
+                    }
+                  }}
+                  className="text-[#A3A3A3] hover:text-white transition-colors uppercase tracking-widest text-xs font-semibold"
+                >
+                  Services
+                </Link>
+                  <Link href="/work" className="text-[#A3A3A3] hover:text-white transition-colors uppercase tracking-widest text-xs font-semibold">Work</Link>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <Link href="/about" className="text-[#A3A3A3] hover:text-white transition-colors uppercase tracking-widest text-xs font-semibold">About</Link>
+                  <Link href="/faq" className="text-[#A3A3A3] hover:text-white transition-colors uppercase tracking-widest text-xs font-semibold">FAQ</Link>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <Link href="/contact" className="text-[#A3A3A3] hover:text-white transition-colors uppercase tracking-widest text-xs font-semibold">Contact</Link>
+                  <Link href="/privacy-policy" className="text-[#A3A3A3] hover:text-white transition-colors uppercase tracking-widest text-xs font-semibold">Privacy</Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="w-full h-px bg-white/10 mb-6"></div>
+
+            {/* Bottom Half: Social & Copyright */}
+            <div className="flex flex-col items-center justify-center gap-6">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex items-center gap-4">
+                  <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all" aria-label="LinkedIn">
+                    <Linkedin className="w-4 h-4" />
+                  </a>
+                  <a href="https://www.instagram.com/noableu/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all" aria-label="Instagram">
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                </div>
+                <div className="hidden md:block w-px h-6 bg-white/20"></div>
+                <div className="flex items-center gap-3 text-sm text-[#A3A3A3]">
+                  <span>{['nb', '@', 'noaberger.com'].join('')}</span>
+                  <button onClick={(e) => {
+                    navigator.clipboard.writeText(['nb', '@', 'noaberger.com'].join(''));
+                    const icon = e.currentTarget.querySelector('svg');
+                    if (icon) {
+                      icon.style.color = '#4ade80';
+                      setTimeout(() => icon.style.color = '', 2000);
+                    }
+                  }} className="hover:text-white transition-colors" aria-label="Copy email">
+                    <Copy className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              <div className="text-center text-[#A3A3A3] text-sm">
+                © {new Date().getFullYear()} BLEUKEI. All rights reserved.
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}

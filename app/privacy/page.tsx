@@ -36,8 +36,8 @@ export default function Privacy() {
       <p className="mb-4">
         We keep inquiry emails for as long as needed to handle the conversation. You can
         request access to or deletion of your information at any time by emailing{' '}
-        <a href="mailto:nb@noaberger.com" className="text-teal-400 hover:text-teal-300">
-          nb@noaberger.com
+        <a href={'mailto:' + ['nb', '@', 'noaberger.com'].join('')} className="text-teal-400 hover:text-teal-300">
+          {['nb', '@', 'noaberger.com'].join('')}
         </a>.
       </p>
 
@@ -48,7 +48,7 @@ export default function Privacy() {
       </p>
 
       <p className="mt-12 text-sm text-white/40">
-        Questions about this policy: nb@noaberger.com
+        Questions about this policy: {['nb', '@', 'noaberger.com'].join('')}
       </p>
     </main>
   );

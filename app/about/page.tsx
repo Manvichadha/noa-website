@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Calendar } from 'lucide-react';
+import { Calendar, ArrowRight, Zap, Building, User, TrendingUp } from 'lucide-react';
 
 function FadeInUp({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) {
   return (
@@ -69,21 +69,63 @@ export default function AboutPage() {
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#1A1A1A] mb-12">The Story</h2>
             <div className="max-w-3xl space-y-8 text-[#1A1A1A]/80 text-lg md:text-xl leading-relaxed font-light">
               <p>
-                I spent years in sports sponsorship brokerage watching how serious brands operated the strategy, the systems, the playbooks that made everything compound over time. Then I'd talk to local business owners and see the gap. Great products, loyal customers, real talent and zero visibility. Not because they weren't good enough, but because nobody had ever shown them how to compete.
+                The firm behind the systems
               </p>
               <p>
-                The tools that big companies take for granted brand positioning, customer retention systems, data-driven marketing none of it was being built for businesses doing $500K or $2M a year. The agencies that claimed to help were either too expensive, too generic, or too focused on looking busy instead of driving results.
+                BleuKei exists because most businesses know exactly what they should be doing: consistent marketing, disciplined follow-up, modern tools, clean operations. They just do not have the time, team, or specialty to do it. We are the firm that does it for them, quietly, behind their brand.
               </p>
               <p>
-                That's what BLEUKEI is built to fix. We bring the same strategic thinking that works at the top of the market, and we make it work for local businesses with the automation and AI infrastructure to make it sustainable, not just a one-time campaign.
+                We are deliberately lean: senior strategy, a dedicated build team, and AI doing the heavy lifting everywhere it genuinely helps. That structure is the point. It is how our clients get big-company infrastructure without big-agency overhead, and it is the same playbook we use to run BleuKei itself.
               </p>
             </div>
           </FadeInUp>
         </div>
       </section>
 
+      {/* Founder Section */}
+      <section id="founder" className="bg-[#0a0a0a] py-32 px-6 md:px-12 lg:px-24">
+        <div className="max-w-[1400px] mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+            
+            <div className="self-start">
+              <FadeInUp>
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="text-white/90 text-sm font-bold tracking-[0.2em] uppercase">The Founder</span>
+                </div>
+              </FadeInUp>
+              <RevealLine>
+                <h2 className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-bold tracking-tight text-white mb-6">
+                  Led by Noa Berger
+                </h2>
+              </RevealLine>
+            </div>
+
+            <div className="flex flex-col gap-8 self-start">
+              <FadeInUp delay={0.1}>
+                <p className="text-[clamp(1.1rem,1.5vw,1.5rem)] leading-relaxed text-white/80 font-light">
+                  Noa spent years structuring partnerships for serious brands, inside the rooms where growth deals actually get made. What stood out was not the deals. It was the infrastructure: the systems, playbooks, and follow-up discipline that made everything compound.
+                </p>
+              </FadeInUp>
+              <FadeInUp delay={0.2}>
+                <p className="text-[clamp(1.1rem,1.5vw,1.5rem)] leading-relaxed text-white/80 font-light">
+                  BleuKei brings that infrastructure, plus the AI capability big companies take for granted, to businesses that never had access to either.
+                </p>
+              </FadeInUp>
+              <FadeInUp delay={0.3}>
+                <div className="flex flex-wrap gap-6 mt-4">
+                  <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors border-b border-white/20 hover:border-white pb-1 font-medium">
+                    LinkedIn <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </FadeInUp>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* What Makes Us Different */}
-      <section className="bg-[#FAF9F6] pb-32 px-6 md:px-12 lg:px-24">
+      <section className="bg-[#FAF9F6] pb-32 px-6 md:px-12 lg:px-24 pt-32">
         <div className="max-w-[1400px] mx-auto w-full">
           <FadeInUp>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#1A1A1A] mb-4">What Makes Us Different</h2>
@@ -92,6 +134,9 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
             <FadeInUp delay={0.1}>
+              <div className="w-12 h-12 border border-[#1A1A1A]/20 rounded-full flex items-center justify-center mb-6">
+                <Zap className="w-5 h-5 text-[#1A1A1A]" />
+              </div>
               <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">AI-Powered, Not Just Advice</h3>
               <p className="text-[#1A1A1A]/70 text-lg leading-relaxed">
                 We don't just tell you what to do we build and run the systems that do it. Automation, AI tools, and operational infrastructure that keeps working after we've left the room.
@@ -99,6 +144,9 @@ export default function AboutPage() {
             </FadeInUp>
 
             <FadeInUp delay={0.2}>
+              <div className="w-12 h-12 border border-[#1A1A1A]/20 rounded-full flex items-center justify-center mb-6">
+                <Building className="w-5 h-5 text-[#1A1A1A]" />
+              </div>
               <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Built for Local Business</h3>
               <p className="text-[#1A1A1A]/70 text-lg leading-relaxed">
                 We're not enterprise consulting repackaged for small budgets. Every framework, every tactic, every metric is built around the reality of running a local business tight margins, limited bandwidth, and real stakes.
@@ -106,13 +154,19 @@ export default function AboutPage() {
             </FadeInUp>
 
             <FadeInUp delay={0.3}>
-              <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Founder-Led, Every Engagement</h3>
+              <div className="w-12 h-12 border border-[#1A1A1A]/20 rounded-full flex items-center justify-center mb-6">
+                <User className="w-5 h-5 text-[#1A1A1A]" />
+              </div>
+              <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Senior attention, every engagement</h3>
               <p className="text-[#1A1A1A]/70 text-lg leading-relaxed">
-                You work directly with Noa. No account managers, no hand-offs to junior staff. The same thinking and experience that built the strategy is the same presence that executes it with you.
+                The people who design your strategy are the people who build it. No account managers, no hand-offs, no junior staff learning on your budget.
               </p>
             </FadeInUp>
 
             <FadeInUp delay={0.4}>
+              <div className="w-12 h-12 border border-[#1A1A1A]/20 rounded-full flex items-center justify-center mb-6">
+                <TrendingUp className="w-5 h-5 text-[#1A1A1A]" />
+              </div>
               <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Results-First, Always Measurable</h3>
               <p className="text-[#1A1A1A]/70 text-lg leading-relaxed">
                 We establish clear baselines in week one and measure everything that matters not vanity metrics. If we can't tie it to revenue, leads, or time saved, we don't track it.

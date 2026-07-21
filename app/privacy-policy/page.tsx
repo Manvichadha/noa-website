@@ -38,7 +38,7 @@ export default function PrivacyPolicy() {
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">Data retention and your rights</h2>
-              <p>We keep inquiry emails for as long as needed to handle the conversation. You can request access to or deletion of your information at any time by emailing nb@noaberger.com.</p>
+              <p>We keep inquiry emails for as long as needed to handle the conversation. You can request access to or deletion of your information at any time by emailing {['nb', '@', 'noaberger.com'].join('')}.</p>
             </section>
 
             <section>
@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
             </section>
 
             <section className="pt-8 border-t border-white/10 mt-16">
-              <p>Questions about this policy: <a href="mailto:nb@noaberger.com" className="text-white hover:text-white/70 transition-colors">nb@noaberger.com</a></p>
+              <p>Questions about this policy: <a href={`mailto:${'nb'}@noaberger.com`} className="text-white hover:text-white/70 transition-colors">{['nb', '@', 'noaberger.com'].join('')}</a></p>
             </section>
           </div>
         </motion.div>

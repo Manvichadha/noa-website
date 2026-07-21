@@ -1,0 +1,23 @@
+<USER_REQUEST>
+the client gave the following changes, explain them then make them
+
+1. Quick fixes 1.1 The “Tell Us About Your Project” form does not go anywhere. When someone submits it, the message must arrive at nb@noaberger.com, the visitor must see a confirmation on screen, and they should get an automatic reply saying: “Thanks for reaching out. We read every message and respond within one business day.” 1.2 The grey text on the black background is too hard to read. Make all body text lighter (developers: see 7.6 for the exact values). 1.3 Change the orange accent color to a royal blue/purple. The exact shade is your choice within that family. The accent line under words currently overlaps the letters; move it below them so it looks clean. 1.4 The custom cursor moves too slowly behind the mouse. Make it keep up, or remove it. Turn it off on phones and tablets. 1.5 The menu icon in the top right behaves strangely when pressed. Give it a clean open/close state. 1.6 The logo top left: use the BleuKei logo from the current live site (bleukei.com). 1.7 The heading “Growth,” and “engineered.” is currently built as two separate headings. Make it one heading (this matters for Google; developers see 7.2). The same problem exists on the FAQ heading (“Frequently” / “asked questions”) and the footer (“Want to start a” / “project together?”). Fix all of them the same way. 1.8 The footer must link to: Services, Work, About, FAQ, Contact, Privacy, LinkedIn, Instagram. The FAQ page is currently missing from it. 1.9 Remove everything that says “Coming Soon” anywhere on the site.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-21T17:13:02+05:30.
+
+The user's current state is as follows:
+Active Document: /Users/viksitchadha/Desktop/Noa/bleukei-website/package.json (LANGUAGE_JSON)
+Cursor is on line: 1
+Other open documents:
+- /Users/viksitchadha/Desktop/Noa/bleukei-website/app/page.tsx (LANGUAGE_TSX)
+- /Users/viksitchadha/Desktop/Noa/bleukei-website/tailwind.config.js (LANGUAGE_JAVASCRIPT)
+- /Users/viksitchadha/Desktop/Noa/bleukei-website/app/layout.tsx (LANGUAGE_TSX)
+- /Users/viksitchadha/Desktop/Noa/bleukei-website/package.json (LANGUAGE_JSON)
+- /Users/viksitchadha/Desktop/Noa/bleukei-website/app/privacy-policy/page.tsx (LANGUAGE_TSX)
+Running terminal commands:
+- npm run dev (in /Users/viksitchadha/Desktop/Noa/bleukei-website, running for 5m39s)
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.5 Flash (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

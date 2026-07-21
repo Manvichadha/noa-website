@@ -1,0 +1,13 @@
+# BleuKei
+
+> BleuKei is a growth and operations firm that builds and runs the marketing,
+> sales, AI, and automation systems businesses need but do not have the time,
+> team, or specialty to run themselves. Clients span e-commerce, retail,
+> restaurants, healthcare, hospitality, sales, marketing, and technology.
+
+## Pages
+
+- [Services](https://bleukei.com/#services)
+- [Work](https://bleukei.com/work)
+- [FAQ](https://bleukei.com/faq)
+- [Contact](https://bleukei.com/contact)

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Copy, Check } from 'lucide-react';
 
@@ -18,6 +19,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
   const handleCopy = () => {
     navigator.clipboard.writeText('nb@noaberger.com');
     setCopied(true);
@@ -26,10 +33,10 @@ export default function Header() {
 
   const navLinks = [
     { name: 'About', href: '/about' },
-    { name: 'Work', href: '/#work' },
+    { name: 'Work', href: '/work' },
     { name: 'Services', href: '/#services' },
-    { name: 'FAQ', href: '/#faq' },
-    { name: 'Founder', href: '/#founder' },
+    { name: 'FAQ', href: '/faq' },
+    { name: 'Founder', href: '/about#founder' },
   ];
 
   return (
@@ -39,39 +46,56 @@ export default function Header() {
           }`}
       >
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
-          <Link href="/" className="relative z-[60] cursor-hover">
-            <span className={`text-xl font-bold tracking-tight transition-colors duration-300 text-white`}>
-              BLEUKEI
-            </span>
+          {/* Logo */}
+          <Link href="/" className="relative z-[60] cursor-hover" aria-label="BLEUKEI Home">
+            <div className="relative h-14 w-44">
+              <Image
+                src="/images/bleukei-logo-dark.png"
+                alt="BLEUKEI"
+                fill
+                className="object-contain object-left"
+                priority
+              />
+            </div>
           </Link>
 
           <div className="flex items-center gap-8 relative z-[60]">
+            {/* Hamburger / Close toggle */}
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={`group flex items-center gap-4 cursor-hover transition-colors duration-300 text-white`}
+              onClick={() => setIsOpen((prev) => !prev)}
+              className="group flex items-center gap-4 cursor-hover transition-colors duration-300 text-white"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
             >
-              <span className="font-medium text-sm tracking-wider">Menu</span>
-              <div className="flex flex-col gap-1.5 w-8">
-                <motion.div
-                  animate={{
-                    rotate: isOpen ? 45 : 0,
-                    y: isOpen ? 8 : 0
-                  }}
-                  className={`h-0.5 w-full transition-colors duration-300 bg-white`}
+              <span className="font-medium text-sm tracking-wider">
+                {isOpen ? 'Close' : 'Menu'}
+              </span>
+              {/* Two-bar icon that pivots into an X */}
+              <div className="flex flex-col justify-center w-6 h-5 gap-0">
+                <motion.span
+                  className="block h-0.5 w-full bg-white origin-center rounded-full"
+                  animate={
+                    isOpen
+                      ? { rotate: 45, y: 5 }
+                      : { rotate: 0, y: 0 }
+                  }
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 />
-                <motion.div
-                  animate={{
-                    rotate: isOpen ? -45 : 0,
-                    y: isOpen ? -8 : 0
-                  }}
-                  className={`h-0.5 w-full transition-colors duration-300 bg-white`}
+                <motion.span
+                  className="block h-0.5 w-full bg-white origin-center rounded-full mt-2"
+                  animate={
+                    isOpen
+                      ? { rotate: -45, y: -5 }
+                      : { rotate: 0, y: 0 }
+                  }
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 />
               </div>
             </button>
 
             <Link
-              href="/#contact"
-              className={`hidden md:block cursor-hover font-medium transition-colors duration-300 text-white border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black text-sm`}
+              href="/contact"
+              className="hidden md:block cursor-hover font-medium transition-colors duration-300 text-white border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-black text-sm"
             >
               Contact
             </Link>
@@ -104,7 +128,34 @@ export default function Header() {
                     >
                       <Link
                         href={link.href}
-                        onClick={() => setIsOpen(false)}
+                        onClick={(e) => {
+                          setIsOpen(false);
+                          if (link.href.includes('#')) {
+                            const [targetPath, targetId] = link.href.split('#');
+                            const currentPath = window.location.pathname;
+                            
+                            // If navigating to a hash on the current page, manually scroll after unlock
+                            if (currentPath === targetPath || (currentPath === '/' && targetPath === '/')) {
+                              e.preventDefault();
+                              setTimeout(() => {
+                                const el = document.getElementById(targetId);
+                                if (el) {
+                                  el.scrollIntoView({ behavior: 'smooth' });
+                                  window.history.pushState({}, '', link.href);
+                                }
+                              }, 100); // Wait for overflow:hidden to be removed
+                            } else {
+                              // If navigating to a DIFFERENT page with a hash, Next.js often drops the scroll.
+                              // We let Next.js change the route, and manually trigger the scroll after it mounts.
+                              setTimeout(() => {
+                                const el = document.getElementById(targetId);
+                                if (el) {
+                                  el.scrollIntoView({ behavior: 'smooth' });
+                                }
+                              }, 600); // Wait 600ms for the new page to paint
+                            }
+                          }
+                        }}
                         className="group inline-flex items-center cursor-hover text-[clamp(2.5rem,5vw,4rem)] font-bold tracking-tight"
                       >
                         {link.name}
@@ -123,18 +174,16 @@ export default function Header() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 1, delay: 0.4 }}
                 >
-
-
                   <h3 className="text-3xl md:text-5xl font-bold leading-tight mb-12">
                     Want to start a project together?<br />
-                    <span className="text-white/50">Get in touch</span>
+                    <span className="text-[#A3A3A3]">Get in touch</span>
                   </h3>
 
                   <div className="grid grid-cols-2 gap-8">
                     <div>
-                      <h4 className="text-white/50 text-sm mb-4">Email</h4>
+                      <h4 className="text-[#A3A3A3] text-sm mb-4">Email</h4>
                       <div className="flex items-center gap-4">
-                        <span className="font-medium">nb@noaberger.com</span>
+                        <span className="font-medium">{['nb', '@', 'noaberger.com'].join('')}</span>
                         <button
                           onClick={handleCopy}
                           className="cursor-hover flex items-center gap-2 text-xs font-medium bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors"
@@ -144,7 +193,7 @@ export default function Header() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-white/50 text-sm mb-4">Social</h4>
+                      <h4 className="text-[#A3A3A3] text-sm mb-4">Social</h4>
                       <div className="flex flex-col gap-2">
                         <a href="https://www.linkedin.com/in/noabberger/" target="_blank" rel="noopener noreferrer" className="cursor-hover font-medium hover:text-white/70 transition-colors">LinkedIn</a>
                         <a href="https://www.instagram.com/noableu/" target="_blank" rel="noopener noreferrer" className="cursor-hover font-medium hover:text-white/70 transition-colors">Instagram</a>

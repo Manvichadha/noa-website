@@ -65,7 +65,7 @@ const FAQItem = ({ q, a, index }: { q: string; a: string; index: number }) => {
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <p className="text-gray-400 pb-5 leading-relaxed">{a}</p>
+            <p className="text-gray-200 pb-5 leading-relaxed">{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -86,7 +86,7 @@ const StillCurious = () => {
           className="container mx-auto max-w-3xl text-center"
         >
           <h1 className="text-5xl font-bold mb-4">Everything you need to know</h1>
-          <p className="text-gray-400 text-lg">Honest answers to the questions we get most.</p>
+          <p className="text-gray-200 text-lg">Honest answers to the questions we get most.</p>
         </motion.div>
       </section>
 
@@ -110,50 +110,6 @@ const StillCurious = () => {
         </div>
       </section>
 
-      {/* Quiz — Coming Soon */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-3xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="border border-white/10 rounded-2xl p-12 text-center"
-          >
-            <div className="text-4xl mb-4">🎯</div>
-            <h2 className="text-2xl font-bold mb-3">2-Minute Visibility Quiz</h2>
-            <p className="text-gray-400 max-w-md mx-auto mb-6">
-              Find out exactly where your business is losing visibility — and what to fix first.
-            </p>
-            <span className="inline-block bg-white/10 text-gray-300 text-sm font-medium py-2 px-4 rounded-full">
-              Coming Soon
-            </span>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Resources — Coming Soon */}
-      <section className="py-20 px-4 bg-gradient-to-b from-black to-gray-900">
-        <div className="container mx-auto max-w-3xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="border border-white/10 rounded-2xl p-12 text-center"
-          >
-            <div className="text-4xl mb-4">📚</div>
-            <h2 className="text-2xl font-bold mb-3">Free Resources</h2>
-            <p className="text-gray-400 max-w-md mx-auto mb-6">
-              Guides, checklists, and templates for local business owners. No fluff.
-            </p>
-            <span className="inline-block bg-white/10 text-gray-300 text-sm font-medium py-2 px-4 rounded-full">
-              Coming Soon
-            </span>
-          </motion.div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="py-24 px-4">
         <motion.div
@@ -164,7 +120,7 @@ const StillCurious = () => {
           className="container mx-auto text-center"
         >
           <h2 className="text-3xl font-bold mb-4">Still have questions?</h2>
-          <p className="text-gray-400 mb-8">Just ask. Book a free call and we'll answer everything directly.</p>
+          <p className="text-gray-200 mb-8">Just ask. Book a free call and we'll answer everything directly.</p>
           <Link
             href="/contact"
             className="inline-block bg-teal-500 hover:bg-teal-600 text-white font-semibold py-4 px-8 rounded-xl transition-all hover:scale-105"
