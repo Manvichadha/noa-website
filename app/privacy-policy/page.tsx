@@ -52,6 +52,7 @@ export default function PrivacyPolicy() {
           </div>
         </motion.div>
       </div>
+      <Footer />
     </main>
   );
 }

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Calendar, ArrowRight, Zap, Building, User, TrendingUp } from 'lucide-react';
+import Footer from '@/components/Footer';
 
 function FadeInUp({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) {
   return (
@@ -45,12 +46,8 @@ export default function AboutPage() {
           
           <RevealLine>
             <h1 className="text-[clamp(3rem,6vw,5.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-white pb-4">
-              We're in the business of
-            </h1>
-          </RevealLine>
-          <RevealLine delay={0.1}>
-            <h1 className="text-[clamp(3rem,6vw,5.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-white/50 pb-4">
-              giving you back your business
+              We're in the business of{' '}
+              <span className="text-white/50">giving you back your business</span>
             </h1>
           </RevealLine>
 
@@ -276,6 +273,7 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <Footer />
     </main>
   );
 }

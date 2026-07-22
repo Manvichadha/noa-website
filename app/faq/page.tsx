@@ -132,12 +132,7 @@ export default function FAQPage() {
           
           <RevealLine>
             <h1 className="text-[clamp(3rem,6vw,5.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-white pb-4">
-              Frequently
-            </h1>
-          </RevealLine>
-          <RevealLine delay={0.1}>
-            <h1 className="text-[clamp(3rem,6vw,5.5rem)] leading-[1.05] font-bold tracking-[-0.02em] text-[#A3A3A3] pb-4">
-              asked questions
+              Frequently <span className="text-[#A3A3A3]">asked questions</span>
             </h1>
           </RevealLine>
         </div>

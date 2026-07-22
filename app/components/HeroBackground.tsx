@@ -76,11 +76,11 @@ export default function HeroBackground() {
         const flicker = Math.sin(time * p.flickerSpeed + p.flickerOffset) * 0.3 + 0.7;
         const alpha = p.opacity * flicker;
 
-        // Some particles are warm-toned (golden), most are white
+        // Some particles are bright light-blue, most are pure white
         if (p.size > 1.2) {
-          ctx.fillStyle = `rgba(255, 200, 100, ${alpha})`;
+          ctx.fillStyle = `rgba(190, 210, 255, ${Math.min(1, alpha * 1.5)})`;
         } else {
-          ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.7})`;
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
         }
 
         ctx.beginPath();
@@ -144,14 +144,14 @@ export default function HeroBackground() {
       <div 
         className="absolute top-[30%] right-[40%] w-[50%] h-[50%] rounded-full opacity-20 pointer-events-none mix-blend-screen"
         style={{
-          background: 'radial-gradient(circle, rgba(180, 100, 30, 0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(44, 82, 245, 0.08) 0%, transparent 70%)',
           filter: 'blur(60px)'
         }}
       />
       <div 
         className="absolute bottom-[20%] right-[10%] w-[70%] h-[70%] rounded-full opacity-30 pointer-events-none mix-blend-screen animate-pulse"
         style={{
-          background: 'radial-gradient(circle, rgba(255, 160, 60, 0.04) 0%, rgba(60, 80, 200, 0.03) 40%, transparent 60%)',
+          background: 'radial-gradient(circle, rgba(153, 169, 255, 0.04) 0%, rgba(44, 82, 245, 0.03) 40%, transparent 60%)',
           filter: 'blur(90px)',
           animationDuration: '12s'
         }}
@@ -161,7 +161,7 @@ export default function HeroBackground() {
       <div
         className="absolute inset-0 pointer-events-none mix-blend-screen"
         style={{
-          background: 'linear-gradient(135deg, rgba(255, 180, 50, 0.08) 0%, rgba(200, 120, 30, 0.03) 30%, transparent 70%)',
+          background: 'linear-gradient(135deg, rgba(153, 169, 255, 0.08) 0%, rgba(44, 82, 245, 0.03) 30%, transparent 70%)',
         }}
       />
 
@@ -185,9 +185,9 @@ export default function HeroBackground() {
           borderRadius: '50%',
           transform: 'translate(-50%, -50%)',
           background: 'radial-gradient(circle at top left, #050505 0%, #000 100%)',
-          boxShadow: '10px 10px 40px rgba(255, 170, 50, 0.2), 2px 2px 10px rgba(255, 200, 80, 0.5), inset -20px -20px 40px rgba(255, 150, 40, 0.1)',
-          borderBottom: '1px solid rgba(255, 190, 80, 0.9)',
-          borderRight: '1px solid rgba(255, 190, 80, 0.9)'
+          boxShadow: '10px 10px 40px rgba(44, 82, 245, 0.2), 2px 2px 10px rgba(153, 169, 255, 0.5), inset -20px -20px 40px rgba(44, 82, 245, 0.1)',
+          borderBottom: '1px solid rgba(153, 169, 255, 0.9)',
+          borderRight: '1px solid rgba(153, 169, 255, 0.9)'
         }}
       />
 
@@ -196,7 +196,7 @@ export default function HeroBackground() {
         className="absolute top-0 left-0 w-[40%] h-[40%] pointer-events-none mix-blend-screen"
         style={{
           transform: 'translate(-50%, -50%)',
-          background: 'radial-gradient(circle, rgba(255, 220, 120, 0.15) 0%, rgba(255, 180, 50, 0.05) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(153, 169, 255, 0.15) 0%, rgba(44, 82, 245, 0.05) 40%, transparent 70%)',
           filter: 'blur(30px)'
         }}
       />

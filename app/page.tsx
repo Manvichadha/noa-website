@@ -124,14 +124,14 @@ export default function Home() {
       <section className="relative z-10 w-full border-y border-white/5 bg-white/[0.02] backdrop-blur-md overflow-hidden">
         
         {/* Subtle gold radial glow matching hero */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] h-[150px] bg-[#D8B45A]/[0.04] blur-[100px] rounded-full pointer-events-none z-0"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] h-[150px] bg-[#99A9FF]/[0.04] blur-[100px] rounded-full pointer-events-none z-0"></div>
 
         <FadeInUp delay={0.6} className="w-full relative z-10">
           <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 relative">
             
             {/* Item 1 */}
             <div className="group flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 transition-all duration-300 hover:bg-white/[0.03] cursor-default py-6 px-6 md:px-12 relative z-10">
-              <Building className="w-6 h-6 shrink-0 text-[#D8B45A] drop-shadow-none group-hover:drop-shadow-[0_0_8px_rgba(216,180,90,0.5)] group-hover:-translate-y-[1px] transition-all duration-300 sm:mt-0.5" />
+              <Building className="w-6 h-6 shrink-0 text-[#99A9FF] drop-shadow-none group-hover:drop-shadow-[0_0_8px_rgba(153,169,255,0.5)] group-hover:-translate-y-[1px] transition-all duration-300 sm:mt-0.5" />
               <div>
                 <h4 className="text-white font-medium text-[15px] md:text-[16px] mb-1">Proven Scale</h4>
                 <p className="text-white/50 text-sm leading-snug">Building for <strong className="text-white/90 font-medium">5+ clients</strong> across multiple industries.</p>
@@ -143,7 +143,7 @@ export default function Home() {
 
             {/* Item 2 */}
             <div className="group flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 transition-all duration-300 hover:bg-white/[0.03] cursor-default py-6 px-6 md:px-12 relative z-10">
-              <CheckCircle2 className="w-6 h-6 shrink-0 text-[#D8B45A] drop-shadow-none group-hover:drop-shadow-[0_0_8px_rgba(216,180,90,0.5)] group-hover:-translate-y-[1px] transition-all duration-300 sm:mt-0.5" />
+              <CheckCircle2 className="w-6 h-6 shrink-0 text-[#99A9FF] drop-shadow-none group-hover:drop-shadow-[0_0_8px_rgba(153,169,255,0.5)] group-hover:-translate-y-[1px] transition-all duration-300 sm:mt-0.5" />
               <div>
                 <h4 className="text-white font-medium text-[15px] md:text-[16px] mb-1">Live Systems</h4>
                 <p className="text-white/50 text-sm leading-snug">Every system we show is <strong className="text-white/90 font-medium">live today</strong> and running.</p>
@@ -155,7 +155,7 @@ export default function Home() {
 
             {/* Item 3 */}
             <div className="group flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 transition-all duration-300 hover:bg-white/[0.03] cursor-default py-6 px-6 md:px-12 relative z-10">
-              <Clock className="w-6 h-6 shrink-0 text-[#D8B45A] drop-shadow-none group-hover:drop-shadow-[0_0_8px_rgba(216,180,90,0.5)] group-hover:-translate-y-[1px] transition-all duration-300 sm:mt-0.5" />
+              <Clock className="w-6 h-6 shrink-0 text-[#99A9FF] drop-shadow-none group-hover:drop-shadow-[0_0_8px_rgba(153,169,255,0.5)] group-hover:-translate-y-[1px] transition-all duration-300 sm:mt-0.5" />
               <div>
                 <h4 className="text-white font-medium text-[15px] md:text-[16px] mb-1">Rapid Response</h4>
                 <p className="text-white/50 text-sm leading-snug">Every message answered within <strong className="text-white/90 font-medium">one business day</strong>.</p>
